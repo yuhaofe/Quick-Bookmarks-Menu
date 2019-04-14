@@ -1,0 +1,11 @@
+{
+    "extname": {
+        "message": "Quick Bookmarks Menu"
+    },
+    "extdesc": {
+        "message": "Quick access to bookmarks."
+    },
+    "upper": {
+        "message": "Back"
+    }
+}
