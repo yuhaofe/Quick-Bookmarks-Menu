@@ -81,13 +81,17 @@ function loadFolder(id, parentId){
 document.addEventListener('DOMContentLoaded', function () {
     var bmUpperLink = document.querySelector('#bm-upper a');
     bmUpperLink.innerText = chrome.i18n.getMessage("upper");
+    var bmManageLink = document.querySelector('#bm-manage a');
+    bmManageLink.innerText = chrome.i18n.getMessage("manage");
 
     // ref: https://www.w3schools.com/howto/howto_js_sticky_header.asp
     var bmUpper = document.getElementById('bm-upper');
     var sticky = bmUpper.offsetTop;
     window.onscroll = function() {
         if (window.pageYOffset > sticky) {
-            bmUpper.classList.add("bm-sticky");
+            if (!bmUpper.classList.contains('bm-hide')){
+                bmUpper.classList.add("bm-sticky");
+            }
         } else {
             bmUpper.classList.remove("bm-sticky");
         }
@@ -97,6 +101,11 @@ document.addEventListener('DOMContentLoaded', function () {
         var upper = ev.currentTarget;
         loadFolder(upper.dataset.id);
     };
+    
+    var bmManage = document.getElementById('bm-manage');
+    bmManage.onclick = function(){
+        chrome.tabs.create({'url': 'chrome://bookmarks'});
+    }
     
     loadFolder('1', '0');
 });

@@ -26,6 +26,9 @@ body {
 }
 
 /* bookmark item */
+.bm-tree {
+  padding-bottom: 30px;
+}
 .bm-item {
   width: 100%;
   height: 22px;
@@ -68,4 +71,14 @@ body {
 }
 .bm-sticky + div {
   padding-top: 30px;
+}
+
+/* manage button */
+#bm-manage {
+  border-top-color: #DEDEDE;
+  border-top-width: 1px;
+  border-top-style: solid;
+  position: fixed;
+  bottom: 0;
+  padding-bottom: 5px;
 }
