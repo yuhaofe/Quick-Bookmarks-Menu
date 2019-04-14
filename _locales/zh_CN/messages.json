@@ -1,0 +1,11 @@
+{
+    "extname": {
+        "message": "Quick书签菜单"
+    },
+    "extdesc": {
+        "message": "快速访问书签。"
+    },
+    "upper": {
+        "message": "返回上一层"
+    }
+}

@@ -1,0 +1,71 @@
+/* scroll bar custom */
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+}
+
+/* global font & bg color */
+body {
+  font-size: 12px;
+  background-color:#FFFFFF;
+  width: 300px;
+  margin: 0px 0px;
+  padding: 0px;
+}
+
+/* show & hide */
+.bm-show {
+  display: block;
+}
+.bm-hide {
+  display: none;
+}
+
+/* bookmark item */
+.bm-item {
+  width: 100%;
+  height: 22px;
+  line-height: 22px;
+  padding-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color:inherit; 
+}
+.bm-item:hover {
+  background-color: #EDEDED;
+}
+.bm-item img {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.bm-item a {
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+  margin-left: 5px;
+}
+
+/* back button */
+#bm-upper {
+  border-bottom-color: #DEDEDE;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+.bm-sticky {
+  position: fixed;
+  top: 0;
+}
+.bm-sticky + div {
+  padding-top: 30px;
+}
