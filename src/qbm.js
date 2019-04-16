@@ -133,7 +133,15 @@ document.addEventListener('DOMContentLoaded', function () {
         chrome.tabs.create({'url': 'chrome://bookmarks'});
     }
     
-    loadFolder('1');
+    chrome.storage.local.get(['startup'], function(result) {
+        var startup = '1';
+        if (result.startup){
+            startup = result.startup;
+        }else{
+            chrome.storage.local.set({ startup: startup });
+        }
+        loadFolder(startup);
+    });
 });
 
 

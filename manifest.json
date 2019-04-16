@@ -1,7 +1,7 @@
 {
     "name": "__MSG_extname__",
     "description": "__MSG_extdesc__",
-    "version": "0.2.1.0",
+    "version": "0.2.2.0",
     "manifest_version": 2,
     "icons": {
         "16": "icons/qbm16.png",
@@ -10,6 +10,7 @@
         "128": "icons/qbm128.png"
     },
     "browser_action": {
+        "default_title": "__MSG_tooltip__",
         "default_popup": "src/qbm.html",
         "default_icon": {
             "16": "icons/qbm16.png",
@@ -18,10 +19,12 @@
     },
     "permissions": [
         "bookmarks",
-        "chrome://favicon/"
+        "chrome://favicon/",
+        "contextMenus",
+        "storage"
     ],
     "background": {
-        "page": "src/background.html"
+        "scripts": ["src/background.js"]
     },
     "default_locale": "en"
 }

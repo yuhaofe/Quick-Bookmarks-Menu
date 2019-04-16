@@ -5,6 +5,9 @@
     "extdesc": {
         "message": "Quick access to bookmarks."
     },
+    "tooltip": {
+        "message": "Right click to choose startup folder"
+    },
     "home": {
         "message": "Home"
     },
