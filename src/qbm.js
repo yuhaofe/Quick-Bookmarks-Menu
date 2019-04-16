@@ -105,13 +105,13 @@ function loadFolder(id){
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var rootPath = document.querySelector('#bm-path li[data-id="1"]');
+    var rootPath = document.querySelector('#bm-path li[data-id="0"]');
     rootPath.querySelector('a').innerText = chrome.i18n.getMessage("home");
     var bmManageLink = document.querySelector('#bm-manage a');
     bmManageLink.innerText = chrome.i18n.getMessage("manage");
 
     rootPath.onclick = function(){
-        loadFolder('1');
+        loadFolder('0');
     };
 
     var bmLists = document.getElementById('bm-lists');
