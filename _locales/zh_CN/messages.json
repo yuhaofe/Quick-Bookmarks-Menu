@@ -5,8 +5,8 @@
     "extdesc": {
         "message": "快速访问书签。"
     },
-    "upper": {
-        "message": "返回上一层"
+    "home": {
+        "message": "首页"
     },
     "manage": {
         "message": "管理收藏夹"
