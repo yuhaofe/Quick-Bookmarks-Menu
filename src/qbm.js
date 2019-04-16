@@ -30,10 +30,42 @@ function createBmItem(title, href, icon, id, parentId){
     return bmItem;
 }
 
-function loadFolder(id, parentId){
+function createPath(id){
+    var bmPathCurrent = document.querySelector('#bm-path li[data-id="' + id + '"]');
+    if (bmPathCurrent){
+        var current = bmPathCurrent;
+        var silbings = [];
+        while (current = current.nextSibling){
+            silbings.push(current);
+        }
+        silbings.forEach(function (silbing) {
+            silbing.remove();
+        });
+    }else{
+        var bmPath = document.getElementById('bm-path');
+    
+        var bmPathItem = document.createElement('li');
+        bmPathItem.dataset.id = id;
+        bmPathItem.onclick = function (ev) {
+            var item = ev.currentTarget;
+            loadFolder(item.dataset.id);
+        };
+        var bmPathItemLink = document.createElement('a');
+        bmPathItemLink.href = '#';
+        chrome.bookmarks.get(id, function (nodes) {
+            bmPathItemLink.innerText = nodes[0].title;
+        })
+        bmPathItem.appendChild(bmPathItemLink);
+        bmPath.appendChild(bmPathItem);
+    }
+}
+
+function loadFolder(id){
     if (!id){
         return;
-    }
+    }  
+    createPath(id);
+
     var bmTree;
     var bmTrees = document.querySelectorAll('.bm-tree');
     bmTrees.forEach(function(tree){
@@ -45,13 +77,15 @@ function loadFolder(id, parentId){
 
     if (bmTree){
         bmShow(bmTree);
-        parentId = bmTree.dataset.parentid;
     }else{
         bmTree = document.createElement('div');
         bmTree.classList.add('bm-tree');
         bmTree.dataset.id = id;
-        bmTree.dataset.parentid = parentId;
-        
+
+        var bmLists = document.getElementById('bm-lists');
+        bmLists.appendChild(bmTree);
+
+        var fragment = document.createDocumentFragment();
         chrome.bookmarks.getChildren(id, function(children){
             children.forEach(function(child) {
                 var bmItem;
@@ -61,53 +95,45 @@ function loadFolder(id, parentId){
                     bmItem = createBmItem(child.title, child.url, 'chrome://favicon/' + child.url);
                 }
                 if (bmItem){
-                    bmTree.appendChild(bmItem);
+                    fragment.appendChild(bmItem);
                 }
             });
+            bmTree.appendChild(fragment);
+            bmShow(bmTree);
         });
-        bmShow(bmTree);
-        document.body.appendChild(bmTree);
-    }
-
-    var bmUpper = document.getElementById('bm-upper');
-    if (parentId === '0'){
-        bmHide(bmUpper);
-    }else{
-        bmUpper.dataset.id = parentId;
-        bmShow(bmUpper);
     }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var bmUpperLink = document.querySelector('#bm-upper a');
-    bmUpperLink.innerText = chrome.i18n.getMessage("upper");
+    var rootPath = document.querySelector('#bm-path li[data-id="1"]');
+    rootPath.querySelector('a').innerText = chrome.i18n.getMessage("home");
     var bmManageLink = document.querySelector('#bm-manage a');
     bmManageLink.innerText = chrome.i18n.getMessage("manage");
 
-    // ref: https://www.w3schools.com/howto/howto_js_sticky_header.asp
-    var bmUpper = document.getElementById('bm-upper');
-    var sticky = bmUpper.offsetTop;
-    window.onscroll = function() {
-        if (window.pageYOffset > sticky) {
-            if (!bmUpper.classList.contains('bm-hide')){
-                bmUpper.classList.add("bm-sticky");
-            }
-        } else {
-            bmUpper.classList.remove("bm-sticky");
-        }
+    rootPath.onclick = function(){
+        loadFolder('1');
     };
 
-    bmUpper.onclick = function(ev){
-        var upper = ev.currentTarget;
-        loadFolder(upper.dataset.id);
+    var bmLists = document.getElementById('bm-lists');
+    bmLists.onscroll = function(ev){
+        var lists = ev.currentTarget;
+        lists.classList.remove('scrollbar-hide');
+        lists.classList.add('scrollbar-show');
+        if (lists.hideScroll) {
+            clearTimeout(lists.hideScroll);
+        }
+        lists.hideScroll = setTimeout(function() {
+            lists.classList.remove('scrollbar-show');
+            lists.classList.add('scrollbar-hide');
+        }, 500);
     };
-    
+
     var bmManage = document.getElementById('bm-manage');
     bmManage.onclick = function(){
         chrome.tabs.create({'url': 'chrome://bookmarks'});
     }
     
-    loadFolder('1', '0');
+    loadFolder('1');
 });
 
 

@@ -5,8 +5,8 @@
     "extdesc": {
         "message": "Quick access to bookmarks."
     },
-    "upper": {
-        "message": "Back"
+    "home": {
+        "message": "Home"
     },
     "manage": {
         "message": "Manage Favorites"
