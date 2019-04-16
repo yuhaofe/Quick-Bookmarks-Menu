@@ -5,6 +5,9 @@
     "extdesc": {
         "message": "快速访问书签。"
     },
+    "tooltip": {
+        "message": "右键点击选择起始目录"
+    },
     "home": {
         "message": "首页"
     },
