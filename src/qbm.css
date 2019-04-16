@@ -41,6 +41,7 @@ body {
   background-color: #dbdbdb;
   --breadcrumb-bg-color: #ffffff;
   --breadcrumb-hover-color: #efefef;
+  --breadcrumb-active-color: #e5e5e5;
   padding: 0px;
   margin: 0px;
   border-bottom-color: #dbdbdb;
@@ -71,6 +72,9 @@ body {
 .bm-breadcrumb li:hover *{
   background: var(--breadcrumb-hover-color);
 }
+.bm-breadcrumb li:active *{
+  background: var(--breadcrumb-active-color);
+}
 .bm-breadcrumb li:not(:first-child)::before {
   content: "";
   width: 0;
@@ -81,6 +85,9 @@ body {
 }
 .bm-breadcrumb li:not(:first-child):hover::before {
   border-color: var(--breadcrumb-hover-color) transparent var(--breadcrumb-hover-color) transparent;
+}
+.bm-breadcrumb li:not(:first-child):active::before {
+  border-color: var(--breadcrumb-active-color) transparent var(--breadcrumb-active-color) transparent;
 }
 .bm-breadcrumb li:not(:last-child)::after {
   content: "";
@@ -93,6 +100,9 @@ body {
 }
 .bm-breadcrumb li:not(:last-child):hover::after {
   border-color: transparent transparent transparent var(--breadcrumb-hover-color);
+}
+.bm-breadcrumb li:not(:last-child):active::after {
+  border-color: transparent transparent transparent var(--breadcrumb-active-color);
 }
 .bm-breadcrumb li a {
   color: black;
