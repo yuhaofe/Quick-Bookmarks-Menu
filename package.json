@@ -1,0 +1,25 @@
+{
+  "name": "quick-bookmarks-menu",
+  "version": "0.2.2",
+  "description": "A chrome extension let you access bookmarks quickly.",
+  "scripts": {
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flyhaozi/Quick-Bookmarks-Menu.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flyhaozi/Quick-Bookmarks-Menu/issues"
+  },
+  "homepage": "https://github.com/flyhaozi/Quick-Bookmarks-Menu#readme",
+  "devDependencies": {
+    "del": "^4.1.0",
+    "gulp": "^4.0.0",
+    "gulp-clean-css": "^4.0.0",
+    "gulp-uglify": "^3.0.2",
+    "gulp-zip": "^4.2.0"
+  }
+}
