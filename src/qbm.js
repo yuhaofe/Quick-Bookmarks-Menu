@@ -16,22 +16,18 @@ function createBmItem(title, href, icon, id, parentId){
     bmLink.innerText = title;
     bmLink.href = href;
 
-    if (id){
-        // var bmIcon = document.createElement('span');
-        // bmIcon.innerText = '&#x1F4C1;';
-        var bmIcon = document.createElement('img');
-        bmIcon.src = '../icons/folder.webp';
+    var bmIcon = document.createElement('img');
+    bmIcon.src = icon;
+    
+    if (id){ 
         bmItem.onclick = function(){
             loadFolder(id, parentId);
         };
-        bmItem.appendChild(bmIcon);
     }else{
-        var bmIcon = document.createElement('img');
-        bmIcon.src = icon;
         bmLink.target = '_blank';
-        bmItem.appendChild(bmIcon);
     }
 
+    bmItem.appendChild(bmIcon);
     bmItem.appendChild(bmLink);
     return bmItem;
 }
@@ -96,7 +92,7 @@ function loadFolder(id){
             children.forEach(function(child) {
                 var bmItem;
                 if (!child.url){
-                    bmItem = createBmItem(child.title, '#', '../res/font-awesome/folder-solid.svg', child.id, id);
+                    bmItem = createBmItem(child.title, '#', '../icons/folder.webp', child.id, id);
                 }else{
                     bmItem = createBmItem(child.title, child.url, 'chrome://favicon/' + child.url);
                 }
