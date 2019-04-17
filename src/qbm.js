@@ -11,21 +11,27 @@ function bmHide(item){
 function createBmItem(title, href, icon, id, parentId){
     var bmItem = document.createElement('div');
     bmItem.classList.add('bm-item');
-    var bmIcon = document.createElement('img');
-    bmIcon.src = icon;
+
     var bmLink = document.createElement('a');
     bmLink.innerText = title;
     bmLink.href = href;
 
     if (id){
+        // var bmIcon = document.createElement('span');
+        // bmIcon.innerText = '&#x1F4C1;';
+        var bmIcon = document.createElement('img');
+        bmIcon.src = '../icons/folder.webp';
         bmItem.onclick = function(){
             loadFolder(id, parentId);
         };
+        bmItem.appendChild(bmIcon);
     }else{
+        var bmIcon = document.createElement('img');
+        bmIcon.src = icon;
         bmLink.target = '_blank';
+        bmItem.appendChild(bmIcon);
     }
 
-    bmItem.appendChild(bmIcon);
     bmItem.appendChild(bmLink);
     return bmItem;
 }
@@ -90,7 +96,7 @@ function loadFolder(id){
             children.forEach(function(child) {
                 var bmItem;
                 if (!child.url){
-                    bmItem = createBmItem(child.title, '#', '../res/font-awesome/folder-regular.svg', child.id, id);
+                    bmItem = createBmItem(child.title, '#', '../res/font-awesome/folder-solid.svg', child.id, id);
                 }else{
                     bmItem = createBmItem(child.title, child.url, 'chrome://favicon/' + child.url);
                 }
@@ -105,15 +111,18 @@ function loadFolder(id){
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var rootPath = document.querySelector('#bm-path li[data-id="0"]');
-    rootPath.querySelector('a').innerText = chrome.i18n.getMessage("home");
-    var bmManageLink = document.querySelector('#bm-manage a');
-    bmManageLink.innerText = chrome.i18n.getMessage("manage");
-
+    var rootPath = document.getElementById('bm-path-0');
+    rootPath.lastElementChild.innerText = chrome.i18n.getMessage("home");
     rootPath.onclick = function(){
         loadFolder('0');
     };
 
+    var bmManage = document.getElementById('bm-manage');
+    bmManage.lastElementChild.innerText = chrome.i18n.getMessage("manage");
+    bmManage.onclick = function(){
+        chrome.tabs.create({'url': 'chrome://bookmarks'});
+    };
+    
     var bmLists = document.getElementById('bm-lists');
     bmLists.onscroll = function(ev){
         var lists = ev.currentTarget;
@@ -128,11 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 500);
     };
 
-    var bmManage = document.getElementById('bm-manage');
-    bmManage.onclick = function(){
-        chrome.tabs.create({'url': 'chrome://bookmarks'});
-    }
-    
     chrome.storage.local.get(['startup'], function(result) {
         var startup = '1';
         if (result.startup){
