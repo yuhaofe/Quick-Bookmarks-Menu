@@ -6,12 +6,45 @@
         "message": "快速访问书签。"
     },
     "tooltip": {
-        "message": "右键点击选择起始目录"
+        "message": "右键点击修改默认设置"
     },
     "home": {
         "message": "根目录"
     },
     "manage": {
         "message": "管理收藏夹"
+    },
+    "set_startup": {
+        "message": "设为起始目录"
+    },
+    "set_startup_done": {
+        "message": "已被设为起始目录"
+    },
+    "open_in": {
+        "message": "打开书签于..."
+    },
+    "open_in_new": {
+        "message": "新标签"
+    },
+    "open_in_current": {
+        "message": "当前页"
+    },
+    "open_in_background": {
+        "message": "后台"
+    },
+    "hover_enter": {
+        "message": "目录悬停进入..."
+    },
+    "hover_enter_off": {
+        "message": "关闭"
+    },
+    "hover_enter_slow": {
+        "message": "缓慢"
+    },
+    "hover_enter_medium": {
+        "message": "适中"
+    },
+    "hover_enter_fast": {
+        "message": "快速"
     }
 }
