@@ -1,7 +1,7 @@
 const { src, dest, series } = require('gulp');
 const del = require('del');
 const zip = require('gulp-zip');
-const uglify = require('gulp-uglify');
+const terser = require('gulp-terser');
 const cleanCSS = require('gulp-clean-css');
 
 const clean = () => del('dist/**');
@@ -13,7 +13,7 @@ function copy() {
 
 function minify_js(){
     return src('src/*.js')
-        .pipe(uglify())
+        .pipe(terser())
         .pipe(dest('dist/src/'));
 }
 

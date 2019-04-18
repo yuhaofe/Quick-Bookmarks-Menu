@@ -8,15 +8,21 @@
 </head>
 <body>
   <div id="bm-header">
-    <ul id="bm-path" class="bm-breadcrumb">
+    <ul id="bm-path" class="bm-breadcrumb bm-show">
         <li id="bm-path-0" data-id="0"><a href="#">Home</a></li>
     </ul>
-    <div id="bm-search"></div>
+    <div id="bm-search-box" class="bm-hide">
+      <input type="text">
+    </div>
+    <div id="bm-search-btn"></div>
   </div>
-  <div id="bm-lists" class="scrollbar-hide"></div>
+  <div id="bm-msg" class="bm-hide"><span></span></div>
+  <div id="bm-lists" class="scrollbar-hide">
+    <div id="bm-search-list" class="bm-tree bm-hide"></div>
+  </div>
   <div id="bm-manage" class="bm-item bm-show">
     <img src="../icons/manage.webp">
-    <a href="#">Manage Favorites</a>
+    <span>Manage Favorites</span>
   </div>
 </body>
 </html>

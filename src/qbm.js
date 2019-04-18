@@ -1,105 +1,160 @@
-function bmShow(item){
+function bmShow(item) {
     item.classList.remove('bm-hide');
     item.classList.add('bm-show');
 }
 
-function bmHide(item){
+function bmHide(item) {
     item.classList.remove('bm-show');
     item.classList.add('bm-hide');
 }
 
-function createBmItem(title, href, icon, id, parentId){
-    var bmItem = document.createElement('div');
-    bmItem.classList.add('bm-item');
-
-    var bmLink = document.createElement('a');
-    bmLink.innerText = title;
-    bmLink.href = href;
-
-    var bmIcon = document.createElement('img');
-    bmIcon.src = icon;
-    
-    if (id){ 
-        bmItem.onclick = function(){
-            loadFolder(id, parentId);
-        };
-    }else{
-        bmLink.target = '_blank';
+function bmNotify(msg) {
+    const bmMsg = document.getElementById('bm-msg');
+    if (bmMsg.msgTimeout) {
+        clearTimeout(bmMsg.msgTimeout);
+        bmHide(bmMsg);
     }
-
-    bmItem.appendChild(bmIcon);
-    bmItem.appendChild(bmLink);
-    return bmItem;
+    bmMsg.firstElementChild.innerText = msg;
+    bmShow(bmMsg);
+    bmMsg.msgTimeout = setTimeout(() => bmHide(bmMsg), 1000);
 }
 
-function createPath(id){
-    var bmPathCurrent = document.querySelector('#bm-path li[data-id="' + id + '"]');
-    if (bmPathCurrent){
-        var current = bmPathCurrent;
-        var silbings = [];
-        while (current = current.nextSibling){
-            silbings.push(current);
-        }
-        silbings.forEach(function (silbing) {
-            silbing.remove();
-        });
-    }else{
-        var bmPath = document.getElementById('bm-path');
-    
-        var bmPathItem = document.createElement('li');
-        bmPathItem.dataset.id = id;
-        bmPathItem.onclick = function (ev) {
-            var item = ev.currentTarget;
-            loadFolder(item.dataset.id);
-        };
-        var bmPathItemLink = document.createElement('a');
-        bmPathItemLink.href = '#';
-        chrome.bookmarks.get(id, function (nodes) {
-            bmPathItemLink.innerText = nodes[0].title;
-        })
-        bmPathItem.appendChild(bmPathItemLink);
-        bmPath.appendChild(bmPathItem);
+function addHoverEnter(item, id) {
+    const speed = {
+        slow: 800,
+        medium: 500,
+        fast: 200
     }
-}
-
-function loadFolder(id){
-    if (!id){
+    const hoverEnter = window.qbm.hoverEnter;
+    if (hoverEnter === 'off'){
+        item.onmouseover = null;
+        item.onmouseout = null;
         return;
-    }  
+    }
+    item.onmouseover = function () {
+        if (item.clickTimeout) {
+            clearTimeout(item.clickTimeout);
+        }
+        item.clickTimeout = setTimeout(() => loadFolder(id), speed[hoverEnter]);
+    };
+    item.onmouseout = function () {
+        if (item.clickTimeout) {
+            clearTimeout(item.clickTimeout);
+        }
+    };
+}
+
+function removeHoverEnter(item) {
+    item.onmouseover = null;
+    item.onmouseout = null;
+}
+
+function createBmItems(bmNodes){
+    const fragment = document.createDocumentFragment();
+    bmNodes.forEach(({title, url, id}) => {
+        const bmItem = document.createElement('div');
+        bmItem.classList.add('bm-item');
+        const bmLink = document.createElement('span');
+        bmLink.innerText = title;
+        const bmIcon = document.createElement('img');
+        if (!url) {
+            bmIcon.src = '../icons/folder.webp';
+            bmItem.onclick = () => loadFolder(id);
+            addHoverEnter(bmItem, id);
+        } else {
+            bmIcon.src = 'chrome://favicon/' + url;
+            bmItem.onclick = () => { 
+                let active = false;
+                switch (window.qbm.openIn) {
+                    case 'new':
+                        active = true;
+                    case 'background':
+                        chrome.tabs.create({ url, active });
+                        break;
+                    case 'current':
+                    default:
+                        chrome.tabs.update({ url });
+                        break;
+                }
+            };
+        }
+        bmItem.appendChild(bmIcon);
+        bmItem.appendChild(bmLink);
+        fragment.appendChild(bmItem);
+    });
+    return fragment;
+}
+
+function createPath(folderId) {
+    // remove all items except root
+    const rootPath = document.getElementById('bm-path-0');
+    rootPath.onclick = () => loadFolder('0');
+    addHoverEnter(rootPath, '0');
+
+    let current = rootPath;
+    let nextSilbings = [];
+    while (current = current.nextSibling) {
+        nextSilbings.push(current);
+    }
+    nextSilbings.forEach(silbing => silbing.remove());
+
+    // insert items
+    (function insertItem(id) {
+        if (id === '0') {
+            const lastItem = rootPath.parentElement.lastElementChild;
+            lastItem.title = chrome.i18n.getMessage("set_startup");
+            lastItem.onclick = () => {
+                chrome.storage.local.set({ startup: lastItem.dataset.id });
+                bmNotify(`"${lastItem.firstElementChild.innerText}" ${chrome.i18n.getMessage("set_startup_done")}`);
+            };
+            removeHoverEnter(lastItem);
+            return;
+        }
+        const bmPathItem = document.createElement('li');
+        bmPathItem.dataset.id = id;
+        bmPathItem.onclick = () => loadFolder(id);
+        addHoverEnter(bmPathItem, id);
+
+        const bmPathItemLink = document.createElement('a');
+        bmPathItemLink.href = '#';
+        
+        chrome.bookmarks.get(id, results => {
+            bmPathItemLink.innerText = results[0].title;
+            bmPathItem.appendChild(bmPathItemLink);
+            rootPath.parentElement.insertBefore(bmPathItem, rootPath.nextSibling);
+
+            insertItem(results[0].parentId);
+        });
+    })(folderId);
+}
+
+function loadFolder(id) {
+    if (!id) {
+        return;
+    }
     createPath(id);
 
-    var bmTree;
-    var bmTrees = document.querySelectorAll('.bm-tree');
-    bmTrees.forEach(function(tree){
-        if (tree.dataset.id === id){
+    let bmTree;
+    const bmTrees = document.querySelectorAll('.bm-tree');
+    bmTrees.forEach(tree => {
+        if (tree.dataset.id === id) {
             bmTree = tree;
         }
         bmHide(tree);
     });
 
-    if (bmTree){
+    if (bmTree) {
         bmShow(bmTree);
-    }else{
+    } else {
         bmTree = document.createElement('div');
         bmTree.classList.add('bm-tree');
         bmTree.dataset.id = id;
 
-        var bmLists = document.getElementById('bm-lists');
+        const bmLists = document.getElementById('bm-lists');
         bmLists.appendChild(bmTree);
 
-        var fragment = document.createDocumentFragment();
-        chrome.bookmarks.getChildren(id, function(children){
-            children.forEach(function(child) {
-                var bmItem;
-                if (!child.url){
-                    bmItem = createBmItem(child.title, '#', '../icons/folder.webp', child.id, id);
-                }else{
-                    bmItem = createBmItem(child.title, child.url, 'chrome://favicon/' + child.url);
-                }
-                if (bmItem){
-                    fragment.appendChild(bmItem);
-                }
-            });
+        chrome.bookmarks.getChildren(id, results => {
+            const fragment = createBmItems(results);
             bmTree.appendChild(fragment);
             bmShow(bmTree);
         });
@@ -107,39 +162,67 @@ function loadFolder(id){
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var rootPath = document.getElementById('bm-path-0');
+    const rootPath = document.getElementById('bm-path-0');
     rootPath.lastElementChild.innerText = chrome.i18n.getMessage("home");
-    rootPath.onclick = function(){
-        loadFolder('0');
+
+    const bmSearchBtn = document.getElementById('bm-search-btn');
+    const bmPath = document.getElementById('bm-path');
+    const bmSearchBox = document.getElementById('bm-search-box');
+    const bmSearchList = document.getElementById('bm-search-list');
+    const onsearch = () => {
+        document.removeEventListener('keydown', onsearch);
+        if (bmPath.classList.contains('bm-show')) {
+            const bmTreeShow = document.querySelector('.bm-tree.bm-show');
+            bmHide(bmPath);
+            bmHide(bmTreeShow);
+            bmShow(bmSearchBox);
+            bmShow(bmSearchList);
+            bmSearchBox.firstElementChild.focus();
+        } else if (bmPath.classList.contains('bm-hide')) {
+            bmHide(bmSearchBox);
+            bmShow(bmPath);
+            loadFolder(bmPath.lastElementChild.dataset.id);
+            document.addEventListener('keydown', onsearch, { once: true });
+        }
+    };
+    bmSearchBtn.onclick = onsearch;
+    document.addEventListener('keydown', onsearch, { once: true });
+
+    bmSearchBox.oninput = ev => {
+        const box = ev.target;
+        if (box.inputTimeout) {
+            clearTimeout(box.inputTimeout);
+        }
+        box.inputTimeout = setTimeout(() => {
+            while (bmSearchList.firstChild) {
+                bmSearchList.removeChild(bmSearchList.firstChild);
+            }
+            chrome.bookmarks.search(box.value, result => {
+                const fragment = createBmItems(result);
+                bmSearchList.appendChild(fragment);
+            });
+        }, 400);
     };
 
-    var bmManage = document.getElementById('bm-manage');
+    const bmManage = document.getElementById('bm-manage');
     bmManage.lastElementChild.innerText = chrome.i18n.getMessage("manage");
-    bmManage.onclick = function(){
-        chrome.tabs.create({'url': 'chrome://bookmarks'});
-    };
-    
-    var bmLists = document.getElementById('bm-lists');
-    bmLists.onscroll = function(ev){
-        var lists = ev.currentTarget;
-        lists.classList.remove('scrollbar-hide');
-        lists.classList.add('scrollbar-show');
-        if (lists.hideScroll) {
-            clearTimeout(lists.hideScroll);
+    bmManage.onclick = () => chrome.tabs.create({ 'url': 'chrome://bookmarks' });
+
+    const bmLists = document.getElementById('bm-lists');
+    bmLists.onscroll = () => {
+        bmLists.classList.remove('scrollbar-hide');
+        bmLists.classList.add('scrollbar-show');
+        if (bmLists.hideScroll) {
+            clearTimeout(bmLists.hideScroll);
         }
-        lists.hideScroll = setTimeout(function() {
-            lists.classList.remove('scrollbar-show');
-            lists.classList.add('scrollbar-hide');
-        }, 500);
+        bmLists.hideScroll = setTimeout(() => {
+            bmLists.classList.remove('scrollbar-show');
+            bmLists.classList.add('scrollbar-hide');
+        }, 400);
     };
 
-    chrome.storage.local.get(['startup'], function(result) {
-        var startup = '1';
-        if (result.startup){
-            startup = result.startup;
-        }else{
-            chrome.storage.local.set({ startup: startup });
-        }
+    chrome.storage.local.get(['openIn', 'hoverEnter', 'startup'], ({openIn, hoverEnter, startup}) => {
+        window.qbm = {openIn, hoverEnter};
         loadFolder(startup);
     });
 });
