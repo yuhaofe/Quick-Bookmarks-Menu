@@ -96,11 +96,12 @@ function createPath(folderId) {
     while (current = current.nextSibling) {
         nextSilbings.push(current);
     }
-    nextSilbings.forEach(silbing => silbing.remove());
 
     // insert items
     (function insertItem(id) {
         if (id === '0') {
+            nextSilbings.forEach(silbing => silbing.remove());
+            
             const lastItem = rootPath.parentElement.lastElementChild;
             lastItem.title = chrome.i18n.getMessage("set_startup");
             lastItem.onclick = () => {
@@ -134,17 +135,14 @@ function loadFolder(id) {
     }
     createPath(id);
 
-    let bmTree;
-    const bmTrees = document.querySelectorAll('.bm-tree');
-    bmTrees.forEach(tree => {
-        if (tree.dataset.id === id) {
-            bmTree = tree;
-        }
-        bmHide(tree);
-    });
+    let currentTree = document.querySelector(`.bm-tree.bm-show`);
+    let bmTree = document.querySelector(`.bm-tree[data-id="${id}"]`);
 
     if (bmTree) {
         bmShow(bmTree);
+        if (currentTree) {
+            bmHide(currentTree);
+        }
     } else {
         bmTree = document.createElement('div');
         bmTree.classList.add('bm-tree');
@@ -157,6 +155,9 @@ function loadFolder(id) {
             const fragment = createBmItems(results);
             bmTree.appendChild(fragment);
             bmShow(bmTree);
+            if (currentTree) {
+                bmHide(currentTree);
+            }
         });
     }
 }
