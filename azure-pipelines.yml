@@ -19,3 +19,8 @@ steps:
     npm install
     gulp build --gulpfile gulpfile.js
   displayName: 'npm install and run gulp'
+
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'drop'
+    targetPath: 'dist/archive.zip'
