@@ -3,13 +3,13 @@
         "message": "Quick书签菜单"
     },
     "extdesc": {
-        "message": "快速访问书签。"
+        "message": "快速访问书签或收藏夹。"
     },
     "tooltip": {
         "message": "右键点击修改默认设置"
     },
     "home": {
-        "message": "根目录"
+        "message": "根"
     },
     "manage": {
         "message": "管理收藏夹"
@@ -46,5 +46,8 @@
     },
     "hover_enter_fast": {
         "message": "快速"
+    },
+    "root_folder": {
+        "message": "根目录..."
     }
 }

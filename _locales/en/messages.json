@@ -3,7 +3,7 @@
         "message": "Quick Bookmarks Menu"
     },
     "extdesc": {
-        "message": "Quick access to bookmarks."
+        "message": "Quick access to bookmarks or favorites."
     },
     "tooltip": {
         "message": "Right click to access options"
@@ -46,5 +46,8 @@
     },
     "hover_enter_fast": {
         "message": "Fast"
+    },
+    "root_folder": {
+        "message": "Root folder..."
     }
 }

@@ -29,4 +29,5 @@ function pack() {
         .pipe(dest('dist/'));
 }
 
-exports.build = series(clean, copy, minify_js, minify_css, pack);
+exports.build = series(clean, copy, minify_js, minify_css);
+exports.pack = pack;

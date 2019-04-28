@@ -1,8 +1,9 @@
-chrome.storage.local.get(['openIn', 'hoverEnter', 'startup'], ({ openIn, hoverEnter, startup }) => {
+chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root'], ({ openIn, hoverEnter, startup, root}) => {
     const qbm = {
         startup: '1',
         openIn: 'new',
-        hoverEnter: 'medium'
+        hoverEnter: 'medium',
+        root: 'root'
     };
 
     if (!startup) {
@@ -21,6 +22,12 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup'], ({ openIn, hoverEn
         chrome.storage.local.set({ hoverEnter } = qbm);
     } else {
         qbm.hoverEnter = hoverEnter;
+    }
+
+    if (!root) {
+        chrome.storage.local.set({ root } = qbm);
+    } else {
+        qbm.root = root;
     }
 
     // open in menus
@@ -106,6 +113,46 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup'], ({ openIn, hoverEn
         contexts: ['browser_action']
     });
 
+    // root folder menus
+    const rootFolderChecked = {
+        root: [true, false, false],
+        bar: [false, true, false],
+        other: [false, false, true]
+    }
+    chrome.contextMenus.create({
+        id: 'root_folder',
+        title: chrome.i18n.getMessage("root_folder"),
+        type: 'normal',
+        contexts: ['browser_action']
+    });
+    chrome.contextMenus.create({
+        id: 'root_folder_root',
+        title: chrome.i18n.getMessage("home"),
+        type: 'radio',
+        checked: rootFolderChecked[qbm.root][0],
+        parentId: 'root_folder',
+        contexts: ['browser_action']
+    });
+    chrome.bookmarks.get('1', results => {
+        chrome.contextMenus.create({
+            id: 'root_folder_bar',
+            title: results[0].title,
+            type: 'radio',
+            checked: rootFolderChecked[qbm.root][1],
+            parentId: 'root_folder',
+            contexts: ['browser_action']
+        });
+    });
+    chrome.bookmarks.get('2', results => {
+        chrome.contextMenus.create({
+            id: 'root_folder_other',
+            title: results[0].title,
+            type: 'radio',
+            checked: rootFolderChecked[qbm.root][2],
+            parentId: 'root_folder',
+            contexts: ['browser_action']
+        });
+    });
 });
 
 chrome.contextMenus.onClicked.addListener(({ menuItemId, parentMenuItemId }) => {
@@ -122,10 +169,27 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId, parentMenuItemId }) => 
         hover_enter_medium: 'medium',
         hover_enter_fast: 'fast'
     };
+    const root_folder = {
+        key: 'root',
+        root_folder_root: 'root',
+        root_folder_bar: 'bar',
+        root_folder_other: 'other'
+    };
+
     const menus = {
         open_in,
-        hover_enter
+        hover_enter,
+        root_folder
     };
     const parentMenu = menus[parentMenuItemId];
     chrome.storage.local.set({ [parentMenu.key]: parentMenu[menuItemId] });
+    
+    if (parentMenu.key === 'root'){
+        const rootId = {
+            root: '0',
+            bar: '1',
+            other: '2'
+        }
+        chrome.storage.local.set({ startup: rootId[parentMenu[menuItemId]] });
+    }
 });
