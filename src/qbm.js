@@ -86,31 +86,16 @@ function createBmItems(bmNodes){
 }
 
 function createPath(folderId) {
-    // remove all items except root
-    const rootPath = document.getElementById('bm-path-0');
-    rootPath.onclick = () => loadFolder('0');
-    addHoverEnter(rootPath, '0');
-
-    let current = rootPath;
-    let nextSilbings = [];
-    while (current = current.nextSibling) {
-        nextSilbings.push(current);
+    const rootId = {
+        root: '0',
+        bar: '1',
+        other: '2'
     }
+    const bmPath = document.getElementById('bm-path');
+    const fragment = document.createDocumentFragment();
 
     // insert items
     (function insertItem(id) {
-        if (id === '0') {
-            nextSilbings.forEach(silbing => silbing.remove());
-            
-            const lastItem = rootPath.parentElement.lastElementChild;
-            lastItem.title = chrome.i18n.getMessage("set_startup");
-            lastItem.onclick = () => {
-                chrome.storage.local.set({ startup: lastItem.dataset.id });
-                bmNotify(`"${lastItem.firstElementChild.innerText}" ${chrome.i18n.getMessage("set_startup_done")}`);
-            };
-            removeHoverEnter(lastItem);
-            return;
-        }
         const bmPathItem = document.createElement('li');
         bmPathItem.dataset.id = id;
         bmPathItem.onclick = () => loadFolder(id);
@@ -121,9 +106,27 @@ function createPath(folderId) {
         
         chrome.bookmarks.get(id, results => {
             bmPathItemLink.innerText = results[0].title;
+            if (id === '0') bmPathItemLink.innerText = chrome.i18n.getMessage("home");
             bmPathItem.appendChild(bmPathItemLink);
-            rootPath.parentElement.insertBefore(bmPathItem, rootPath.nextSibling);
+            fragment.insertBefore(bmPathItem, fragment.firstElementChild);
 
+            if (id === rootId[window.qbm.root]) {
+                // remove all items
+                while (bmPath.firstChild) {
+                    bmPath.removeChild(bmPath.firstChild);
+                }
+                // append new items
+                bmPath.appendChild(fragment);
+
+                const lastItem = bmPath.lastElementChild;
+                lastItem.title = chrome.i18n.getMessage("set_startup");
+                lastItem.onclick = () => {
+                    chrome.storage.local.set({ startup: lastItem.dataset.id });
+                    bmNotify(`"${lastItem.firstElementChild.innerText}" ${chrome.i18n.getMessage("set_startup_done")}`);
+                };
+                removeHoverEnter(lastItem);
+                return;
+            }
             insertItem(results[0].parentId);
         });
     })(folderId);
@@ -163,9 +166,6 @@ function loadFolder(id) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const rootPath = document.getElementById('bm-path-0');
-    rootPath.lastElementChild.innerText = chrome.i18n.getMessage("home");
-
     const bmSearchBtn = document.getElementById('bm-search-btn');
     const bmPath = document.getElementById('bm-path');
     const bmSearchBox = document.getElementById('bm-search-box');
@@ -222,8 +222,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 400);
     };
 
-    chrome.storage.local.get(['openIn', 'hoverEnter', 'startup'], ({openIn, hoverEnter, startup}) => {
-        window.qbm = {openIn, hoverEnter};
+    chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root'], ({openIn, hoverEnter, startup, root}) => {
+        window.qbm = {openIn, hoverEnter, root};
         loadFolder(startup);
     });
 });
