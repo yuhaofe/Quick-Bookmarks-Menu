@@ -1,9 +1,10 @@
-chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root'], ({ openIn, hoverEnter, startup, root}) => {
+chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme'], ({ openIn, hoverEnter, startup, root, theme}) => {
     const qbm = {
         startup: '1',
         openIn: 'new',
         hoverEnter: 'medium',
-        root: 'root'
+        root: 'root',
+        theme: 'auto'
     };
 
     if (!startup) {
@@ -28,6 +29,12 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root'], ({ openIn,
         chrome.storage.local.set({ root } = qbm);
     } else {
         qbm.root = root;
+    }
+
+    if (!theme) {
+        chrome.storage.local.set({ theme } = qbm);
+    } else {
+        qbm.theme = theme;
     }
 
     // open in menus
@@ -153,6 +160,43 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root'], ({ openIn,
             contexts: ['browser_action']
         });
     });
+
+    // color theme menus
+    const colorThemeChecked = {
+        auto: [true, false, false],
+        light: [false, true, false],
+        dark: [false, false, true]
+    }
+    chrome.contextMenus.create({
+        id: 'color_theme',
+        title: chrome.i18n.getMessage("color_theme"),
+        type: 'normal',
+        contexts: ['browser_action']
+    });
+    chrome.contextMenus.create({
+        id: 'color_theme_auto',
+        title: chrome.i18n.getMessage("auto"),
+        type: 'radio',
+        checked: colorThemeChecked[qbm.theme][0],
+        parentId: 'color_theme',
+        contexts: ['browser_action']
+    });
+    chrome.contextMenus.create({
+        id: 'color_theme_light',
+        title: chrome.i18n.getMessage("light"),
+        type: 'radio',
+        checked: colorThemeChecked[qbm.theme][1],
+        parentId: 'color_theme',
+        contexts: ['browser_action']
+    });
+    chrome.contextMenus.create({
+        id: 'color_theme_dark',
+        title: chrome.i18n.getMessage("dark"),
+        type: 'radio',
+        checked: colorThemeChecked[qbm.theme][2],
+        parentId: 'color_theme',
+        contexts: ['browser_action']
+    });
 });
 
 chrome.contextMenus.onClicked.addListener(({ menuItemId, parentMenuItemId }) => {
@@ -175,11 +219,17 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId, parentMenuItemId }) => 
         root_folder_bar: 'bar',
         root_folder_other: 'other'
     };
-
+    const color_theme = {
+        key: 'theme',
+        color_theme_auto: 'auto',
+        color_theme_light: 'light',
+        color_theme_dark: 'dark'
+    }
     const menus = {
         open_in,
         hover_enter,
-        root_folder
+        root_folder,
+        color_theme
     };
     const parentMenu = menus[parentMenuItemId];
     chrome.storage.local.set({ [parentMenu.key]: parentMenu[menuItemId] });

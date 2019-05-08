@@ -49,5 +49,17 @@
     },
     "root_folder": {
         "message": "根目录..."
+    },
+    "color_theme": {
+        "message": "主题色..."
+    },
+    "auto": {
+        "message": "自动"
+    },
+    "light": {
+        "message": "浅色"
+    },
+    "dark": {
+        "message": "深色"
     }
 }

@@ -49,5 +49,17 @@
     },
     "root_folder": {
         "message": "Root folder..."
+    },
+    "color_theme": {
+        "message": "Theme..."
+    },
+    "auto": {
+        "message": "Auto"
+    },
+    "light": {
+        "message": "Light"
+    },
+    "dark": {
+        "message": "Dark"
     }
 }

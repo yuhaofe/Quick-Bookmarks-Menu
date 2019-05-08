@@ -1,3 +1,66 @@
+function applyDarkTheme(style) {
+    style.setProperty('--text-color', '#eeeeee');
+    style.setProperty('--bg-color', '#3a3a3a');
+    style.setProperty('--hover-color', '#545454');
+    style.setProperty('--active-color', '#6d6d6d');
+    style.setProperty('--line-color', '#878787');
+    style.setProperty('--msg-color', '#006375');
+    style.setProperty('--folder-icon', 'url("../icons/folder-dark.webp")');
+    style.setProperty('--search-icon', 'url("../icons/search-dark.webp")');
+    style.setProperty('--manage-icon', 'url("../icons/manage-dark.webp")');
+    style.setProperty('--icon-filter', 'contrast(0.8)');
+    chrome.browserAction.setIcon({
+        path: {
+            "16": "../icons/qbm16-dark.png",
+            "32": "../icons/qbm32-dark.png"
+        }
+    });
+}
+
+function applyLightTheme(style) {
+    style.setProperty('--text-color', '#000000');
+    style.setProperty('--bg-color', '#ffffff');
+    style.setProperty('--hover-color', '#efefef');
+    style.setProperty('--active-color', '#e5e5e5');
+    style.setProperty('--line-color', '#dbdbdb');
+    style.setProperty('--msg-color', '#daf0ff');
+    style.setProperty('--folder-icon', 'url("../icons/folder.webp")');
+    style.setProperty('--search-icon', 'url("../icons/search.webp")');
+    style.setProperty('--manage-icon', 'url("../icons/manage.webp")');
+    style.setProperty('--icon-filter', 'contrast(1)');
+    chrome.browserAction.setIcon({
+        path: {
+            "16": "../icons/qbm16.png",
+            "32": "../icons/qbm32.png"
+        }
+    });
+}
+
+function applyTheme(theme) {
+    const rootStyle = document.documentElement.style;
+    switch (theme) {
+        case 'light':
+            applyLightTheme(rootStyle);
+            break;
+        case 'dark':
+            applyDarkTheme(rootStyle);
+            break;
+        case 'auto':
+        default:
+            const mql = window.matchMedia('(prefers-color-scheme: dark)');
+            const onDark = e => {
+                if (e.matches) {
+                    applyDarkTheme(rootStyle);
+                } else {
+                    applyLightTheme(rootStyle);
+                }
+            };
+            mql.onchange = onDark;
+            onDark(mql);
+            break;
+    }
+}
+
 function bmShow(item) {
     item.classList.remove('bm-hide');
     item.classList.add('bm-show');
@@ -56,12 +119,15 @@ function createBmItems(bmNodes){
         bmItem.classList.add('bm-item');
         const bmLink = document.createElement('span');
         bmLink.innerText = title;
-        const bmIcon = document.createElement('img');
+        bmLink.classList.add('bm-text');
+        let bmIcon;
         if (!url) {
-            bmIcon.src = '../icons/folder.webp';
+            bmIcon = document.createElement('span');
+            bmIcon.classList.add('bm-icon');
             bmItem.onclick = () => loadFolder(id);
             addHoverEnter(bmItem, id);
         } else {
+            bmIcon = document.createElement('img');
             bmIcon.src = 'chrome://favicon/' + url;
             bmItem.onclick = () => { 
                 let active = false;
@@ -222,8 +288,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 400);
     };
 
-    chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root'], ({openIn, hoverEnter, startup, root}) => {
+    chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme'], ({openIn, hoverEnter, startup, root, theme}) => {
         window.qbm = {openIn, hoverEnter, root};
+        applyTheme(theme);
         loadFolder(startup);
     });
 });
