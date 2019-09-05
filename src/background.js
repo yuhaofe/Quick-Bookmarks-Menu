@@ -1,10 +1,44 @@
-chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme'], ({ openIn, hoverEnter, startup, root, theme}) => {
+function colorThemeChanged(theme){
+    switch (theme) {
+        case 'light':
+            chrome.browserAction.setIcon({
+                path: {
+                    "16": "../icons/qbm16.png",
+                    "32": "../icons/qbm32.png"
+                }
+            });
+            break;
+        case 'dark':
+            chrome.browserAction.setIcon({
+                path: {
+                    "16": "../icons/qbm16-dark.png",
+                    "32": "../icons/qbm32-dark.png"
+                }
+            });
+            break;
+        case 'auto':
+        default:
+            const mql = window.matchMedia('(prefers-color-scheme: dark)');
+            if (mql.matches) {
+                colorThemeChanged('dark');
+            }else{
+                colorThemeChanged('light');
+            }
+            chrome.runtime.onMessage.addListener(({ theme }) => {
+                colorThemeChanged(theme);
+            });
+            break;
+    }
+}
+
+chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll'], ({ openIn, hoverEnter, startup, root, theme, scroll}) => {
     const qbm = {
         startup: '1',
         openIn: 'new',
         hoverEnter: 'medium',
         root: 'root',
-        theme: 'auto'
+        theme: 'auto',
+        scroll: 'y'
     };
 
     if (!startup) {
@@ -36,8 +70,15 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme'], (
     } else {
         qbm.theme = theme;
     }
+    colorThemeChanged(qbm.theme);
 
-    // open in menus
+    if (!scroll) {
+        chrome.storage.local.set({ scroll } = qbm);
+    } else {
+        qbm.scroll = scroll;
+    }
+
+    //#region open in menus
     const openInChecked = {
         new: [true, false, false],
         current: [false, true, false],
@@ -73,8 +114,9 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme'], (
         parentId: 'open_in',
         contexts: ['browser_action']
     });
+    //#endregion
 
-    // hover enter menus
+    //#region hover enter menus
     const hoverEnterChecked = {
         off: [true, false, false, false],
         slow: [false, true, false, false],
@@ -119,8 +161,9 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme'], (
         parentId: 'hover_enter',
         contexts: ['browser_action']
     });
+    //#endregion
 
-    // root folder menus
+    //#region root folder menus
     const rootFolderChecked = {
         root: [true, false, false],
         bar: [false, true, false],
@@ -160,13 +203,14 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme'], (
             contexts: ['browser_action']
         });
     });
+    //#endregion
 
-    // color theme menus
+    //#region color theme menus
     const colorThemeChecked = {
         auto: [true, false, false],
         light: [false, true, false],
         dark: [false, false, true]
-    }
+    };
     chrome.contextMenus.create({
         id: 'color_theme',
         title: chrome.i18n.getMessage("color_theme"),
@@ -197,6 +241,36 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme'], (
         parentId: 'color_theme',
         contexts: ['browser_action']
     });
+    //#endregion
+
+    //#region scroll layout menus
+    const scrollLayoutChecked = {
+        y: [true, false],
+        x: [false, true]
+    };
+    chrome.contextMenus.create({
+        id: 'scroll_layout',
+        title: chrome.i18n.getMessage("scroll_layout"),
+        type: 'normal',
+        contexts: ['browser_action']
+    });
+    chrome.contextMenus.create({
+        id: 'scroll_layout_y',
+        title: chrome.i18n.getMessage("scroll_layout_y"),
+        type: 'radio',
+        checked: scrollLayoutChecked[qbm.scroll][0],
+        parentId: 'scroll_layout',
+        contexts: ['browser_action']
+    });
+    chrome.contextMenus.create({
+        id: 'scroll_layout_x',
+        title: chrome.i18n.getMessage("scroll_layout_x"),
+        type: 'radio',
+        checked: scrollLayoutChecked[qbm.scroll][1],
+        parentId: 'scroll_layout',
+        contexts: ['browser_action']
+    });
+    //#endregion
 });
 
 chrome.contextMenus.onClicked.addListener(({ menuItemId, parentMenuItemId }) => {
@@ -224,12 +298,18 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId, parentMenuItemId }) => 
         color_theme_auto: 'auto',
         color_theme_light: 'light',
         color_theme_dark: 'dark'
-    }
+    };
+    const scroll_layout = {
+        key: 'scroll',
+        scroll_layout_y: 'y',
+        scroll_layout_x: 'x'
+    };
     const menus = {
         open_in,
         hover_enter,
         root_folder,
-        color_theme
+        color_theme,
+        scroll_layout
     };
     const parentMenu = menus[parentMenuItemId];
     chrome.storage.local.set({ [parentMenu.key]: parentMenu[menuItemId] });
@@ -241,5 +321,8 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId, parentMenuItemId }) => 
             other: '2'
         }
         chrome.storage.local.set({ startup: rootId[parentMenu[menuItemId]] });
+    }
+    if (parentMenu.key === 'theme'){
+        colorThemeChanged(parentMenu[menuItemId]);
     }
 });

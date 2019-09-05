@@ -61,5 +61,14 @@
     },
     "dark": {
         "message": "深色"
+    },
+    "scroll_layout": {
+        "message": "滚动布局..."
+    },
+    "scroll_layout_y": {
+        "message": "纵向"
+    },
+    "scroll_layout_x": {
+        "message": "横向"
     }
 }
