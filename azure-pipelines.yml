@@ -18,7 +18,6 @@ steps:
 - script: |
     npm install
     gulp build --gulpfile gulpfile.js
-    gulp pack --gulpfile gulpfile.js
   displayName: 'npm install and run gulp'
 
 - publish: $(System.DefaultWorkingDirectory)/dist/
