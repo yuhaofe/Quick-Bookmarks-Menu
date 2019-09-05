@@ -1,6 +1,6 @@
 {
   "name": "quick-bookmarks-menu",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A chrome extension let you access bookmarks quickly.",
   "scripts": {
     "build": "gulp build",
