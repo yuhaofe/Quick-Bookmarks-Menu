@@ -9,12 +9,6 @@ function applyDarkTheme(style) {
     style.setProperty('--search-icon', 'url("../icons/search-dark.webp")');
     style.setProperty('--manage-icon', 'url("../icons/manage-dark.webp")');
     style.setProperty('--icon-filter', 'contrast(0.8)');
-    chrome.browserAction.setIcon({
-        path: {
-            "16": "../icons/qbm16-dark.png",
-            "32": "../icons/qbm32-dark.png"
-        }
-    });
 }
 
 function applyLightTheme(style) {
@@ -28,12 +22,6 @@ function applyLightTheme(style) {
     style.setProperty('--search-icon', 'url("../icons/search.webp")');
     style.setProperty('--manage-icon', 'url("../icons/manage.webp")');
     style.setProperty('--icon-filter', 'contrast(1)');
-    chrome.browserAction.setIcon({
-        path: {
-            "16": "../icons/qbm16.png",
-            "32": "../icons/qbm32.png"
-        }
-    });
 }
 
 function applyTheme(theme) {
@@ -48,27 +36,33 @@ function applyTheme(theme) {
         case 'auto':
         default:
             const mql = window.matchMedia('(prefers-color-scheme: dark)');
-            const onDark = e => {
+            const colorSchemeTest = e => {
                 if (e.matches) {
                     applyDarkTheme(rootStyle);
+                    chrome.runtime.sendMessage({theme: "dark"});
                 } else {
                     applyLightTheme(rootStyle);
+                    chrome.runtime.sendMessage({theme: "light"});
                 }
             };
-            mql.onchange = onDark;
-            onDark(mql);
+            mql.onchange = colorSchemeTest;
+            colorSchemeTest(mql);
             break;
     }
 }
 
-function bmShow(item) {
+function bmShow(item, active = false) {
     item.classList.remove('bm-hide');
-    item.classList.add('bm-show');
+    if (active){
+        item.classList.add('bm-active');
+    }
 }
 
-function bmHide(item) {
-    item.classList.remove('bm-show');
+function bmHide(item, deactive = false) {
     item.classList.add('bm-hide');
+    if (deactive){
+        item.classList.remove('bm-active');
+    }
 }
 
 function bmNotify(msg) {
@@ -119,6 +113,9 @@ function createBmItems(bmNodes){
         bmItem.classList.add('bm-item');
         const bmLink = document.createElement('span');
         bmLink.innerText = title;
+        if (qbm.scroll === 'x') {
+            bmItem.title = title;
+        }
         bmLink.classList.add('bm-text');
         let bmIcon;
         if (!url) {
@@ -136,10 +133,12 @@ function createBmItems(bmNodes){
                         active = true;
                     case 'background':
                         chrome.tabs.create({ url, active });
+                        window.close();
                         break;
                     case 'current':
                     default:
                         chrome.tabs.update({ url });
+                        window.close();
                         break;
                 }
             };
@@ -204,17 +203,20 @@ function loadFolder(id) {
     }
     createPath(id);
 
-    let currentTree = document.querySelector(`.bm-tree.bm-show`);
+    let currentTree = document.querySelector(`.bm-tree.bm-active`);
     let bmTree = document.querySelector(`.bm-tree[data-id="${id}"]`);
 
     if (bmTree) {
-        bmShow(bmTree);
+        bmShow(bmTree, true);
         if (currentTree) {
-            bmHide(currentTree);
+            bmHide(currentTree, true);
         }
     } else {
         bmTree = document.createElement('div');
         bmTree.classList.add('bm-tree');
+        if (qbm.scroll === 'x'){
+            bmTree.classList.add('bm-tree-horiz');
+        }
         bmTree.dataset.id = id;
 
         const bmLists = document.getElementById('bm-lists');
@@ -223,9 +225,9 @@ function loadFolder(id) {
         chrome.bookmarks.getChildren(id, results => {
             const fragment = createBmItems(results);
             bmTree.appendChild(fragment);
-            bmShow(bmTree);
+            bmShow(bmTree, true);
             if (currentTree) {
-                bmHide(currentTree);
+                bmHide(currentTree, true);
             }
         });
     }
@@ -238,14 +240,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const bmSearchList = document.getElementById('bm-search-list');
     const onsearch = () => {
         document.removeEventListener('keydown', onsearch);
-        if (bmPath.classList.contains('bm-show')) {
-            const bmTreeShow = document.querySelector('.bm-tree.bm-show');
+        if (!bmPath.classList.contains('bm-hide')) {
+            const bmTreeActive = document.querySelector('.bm-tree.bm-active');
             bmHide(bmPath);
-            bmHide(bmTreeShow);
+            bmHide(bmTreeActive, true);
             bmShow(bmSearchBox);
-            bmShow(bmSearchList);
+            bmShow(bmSearchList, true);
             bmSearchBox.firstElementChild.focus();
-        } else if (bmPath.classList.contains('bm-hide')) {
+        } else {
             bmHide(bmSearchBox);
             bmShow(bmPath);
             loadFolder(bmPath.lastElementChild.dataset.id);
@@ -288,9 +290,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 400);
     };
 
-    chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme'], ({openIn, hoverEnter, startup, root, theme}) => {
-        window.qbm = {openIn, hoverEnter, root};
+    chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll'], ({openIn, hoverEnter, startup, root, theme, scroll}) => {
+        window.qbm = {openIn, hoverEnter, root, scroll};
         applyTheme(theme);
+        if (scroll === 'x') {
+            bmSearchList.classList.add('bm-tree-horiz');
+            bmLists.classList.add('bm-lists-horiz');
+            bmLists.classList.add('scrollbar-show-horiz');
+            bmLists.onwheel = e =>{
+                e.preventDefault();
+                bmLists.scrollLeft += e.deltaY;
+            };
+        }
         loadFolder(startup);
     });
 });

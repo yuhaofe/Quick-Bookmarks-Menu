@@ -61,5 +61,14 @@
     },
     "dark": {
         "message": "Dark"
+    },
+    "scroll_layout": {
+        "message": "Scroll & Layout..."
+    },
+    "scroll_layout_y": {
+        "message": "Vertical"
+    },
+    "scroll_layout_x": {
+        "message": "Horizontal"
     }
 }
