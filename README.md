@@ -1,8 +1,8 @@
 # Quick Bookmarks Menu
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/fkemipdcgbeknabedhecepcebhlnlhbf?logo=google%20chrome)](https://chrome.google.com/webstore/detail/quick-bookmarks-menu/fkemipdcgbeknabedhecepcebhlnlhbf)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/fkemipdcgbeknabedhecepcebhlnlhbf?logo=google%20chrome)
 ![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/fkemipdcgbeknabedhecepcebhlnlhbf)
-![Chrome Web Store](https://img.shields.io/chrome-web-store/users/fkemipdcgbeknabedhecepcebhlnlhbf)
-![GitHub](https://img.shields.io/github/license/flyhaozi/Quick-Bookmarks-Menu)
+![Chrome Web Store](https://img.shields.io/chrome-web-store/users/fkemipdcgbeknabedhecepcebhlnlhbf)](https://chrome.google.com/webstore/detail/quick-bookmarks-menu/fkemipdcgbeknabedhecepcebhlnlhbf)
+[![GitHub](https://img.shields.io/github/license/flyhaozi/Quick-Bookmarks-Menu)](https://github.com/flyhaozi/Quick-Bookmarks-Menu/blob/master/LICENSE)
 
 A chrome extension gives you quick access to your bookmarks. 
 
