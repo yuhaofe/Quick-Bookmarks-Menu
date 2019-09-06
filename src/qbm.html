@@ -3,25 +3,335 @@
 <head>
   <meta charset="utf-8">
   <title>Quick Bookmarks Menu</title>
-  <link rel="stylesheet" href="qbm.css">
-  <script src="qbm.js"></script>
+  <style>
+    /* global properties */
+    :root {
+      --text-color: #000000;
+      --bg-color: #ffffff;
+      --hover-color: #efefef;
+      --active-color: #e5e5e5;
+      --line-color: #dbdbdb;
+      --msg-color: #daf0ff;
+      --folder-icon: url("../icons/folder.webp");
+      --search-icon: url("../icons/search.webp");
+      --manage-icon: url("../icons/manage.webp");
+      --icon-filter: contrast(1);
+    }
+
+    /* only for ref, actually set in js */
+    /* @media (prefers-color-scheme: dark) {
+      :root {
+        --text-color: #eeeeee;
+        --bg-color: #3a3a3a;
+        --hover-color: #545454;
+        --active-color: #6d6d6d;
+        --line-color: #878787;
+        --msg-color: #006375;
+      }
+    } */
+
+    /* global font & bg color */
+    body {
+      font-size: 12px;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      margin: 0px 0px;
+      padding: 0px;
+      display: flex;
+      flex-direction: column;
+      min-width: 300px;
+      max-width: 800px;
+      max-height: 600px;
+      user-select: none;
+    }
+    bookmarks-header {
+      flex: 0 0 auto;
+    }
+    bookmarks-container {
+      flex: 1 1 auto;
+    }
+    bookmarks-manage {
+      flex: 0 0 auto;
+    }
+  </style>
+  <template id="bookmarks-header-template">
+    <style>
+      :host {
+        height: 30px;
+        line-height: 30px;
+        border-bottom: 1px solid var(--line-color);
+
+        display: flex;
+        flex-direction: row;
+      }
+      ::slotted(*) {
+        flex: 1 1 auto;
+      }
+      ::slotted([hidden]) {
+        display: none!important;
+      }
+      .button {
+        flex: 0 0 auto;
+        height: 100%;
+        width: 30px;
+        border: none;
+        border-left: 1px solid var(--line-color);
+        background-color: var(--bg-color);
+        background-image: var(--search-icon);
+        background-size: 16px 16px;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      .button:hover {
+        background-color: var(--hover-color);
+      }
+      .button:active {
+        background-color: var(--active-color);
+      }
+      .msg {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 30px;
+        line-height: 30px;
+        background-color: var(--msg-color);
+        font-weight: bold;
+        flex-direction: row;
+        justify-content: center;
+        z-index: 3;
+      }
+      :host([msg]) .msg{
+        display: flex;
+      }
+    </style>
+    <slot></slot><div class="button"></div><div class="msg"><span></span></div>
+  </template>
+  <template id="bookmarks-search-template">
+    <style>
+      :host {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+      }
+      input {
+        flex: 1 1 auto;
+        padding-left: 10px;
+        user-select: text;
+      }
+    </style>
+    <input type="text">
+  </template>
+  <template id="bookmarks-path-template">
+      <style>
+        :host {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          height: 30px;
+          line-height: 30px;
+          background-color: var(--line-color);
+          padding: 0px;
+          margin: 0px;
+        }
+        :host([empty]) {
+          background-color: inherit!important;
+        }
+      </style>
+      <slot></slot>
+  </template>
+  <template id="bookmarks-path-item-template">
+      <style>
+        :host {
+          flex: auto;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          min-width: 0;
+          cursor: pointer;
+        }
+        :host(:not(:first-child)) {
+          margin-left: -9px;
+        }
+        :host(:last-child) a{
+          font-weight: bold;
+        }
+        :host(:hover) *{
+          background-color: var(--hover-color);
+        }
+        :host(:active) *{
+          background-color: var(--active-color);
+        }
+        :host(:first-child)::before {
+          content: "";
+          height: 30px;
+          width: 26px;
+          background-color: var(--bg-color);
+          background-image: var(--folder-icon);
+          background-size: 16px 16px;
+          background-position: 10px center;
+          background-repeat: no-repeat;
+        }
+        :host(:first-child:hover)::before {
+          background-color: var(--hover-color);
+        }
+        :host(:first-child:active)::before {
+          background-color: var(--active-color);
+        }
+        :host(:not(:first-child))::before {
+          content: "";
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 15px 0 15px 10px;
+          border-color: var(--bg-color) transparent var(--bg-color) transparent;
+        }
+        :host(:not(:first-child):hover)::before {
+          border-color: var(--hover-color) transparent var(--hover-color) transparent;
+        }
+        :host(:not(:first-child):active)::before {
+          border-color: var(--active-color) transparent var(--active-color) transparent;
+        }
+        :host(:not(:last-child))::after {
+          content: "";
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 15px 0 15px 10px;
+          border-color: transparent transparent transparent var(--bg-color);
+          z-index: 2;
+        }
+        :host(:not(:last-child):hover)::after {
+          border-color: transparent transparent transparent var(--hover-color);
+        }
+        :host(:not(:last-child):active)::after {
+          border-color: transparent transparent transparent var(--active-color);
+        }
+        a {
+          color: var(--text-color);
+          background-color: var(--bg-color);
+          text-decoration: none;
+          flex: auto;
+          padding-left: 5px;
+          overflow: hidden; 
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      </style>
+      <a href="#"></a>
+  </template>
+  <template id="bookmarks-container-template">
+    <style>
+      :host {
+        position: relative;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-width: 300px;
+      }
+      :host([horiz]) {
+        overflow-y: hidden!important;
+        overflow-x: auto!important;
+        max-width: none!important;
+      }
+      :host::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+        background: var(--active-color);
+      }
+      :host::-webkit-scrollbar {
+        display: none;
+      }
+      :host([scroll])::-webkit-scrollbar {
+        display: initial!important;
+        width: 6px;
+      }
+      :host([scroll][horiz])::-webkit-scrollbar {
+        width: auto!important;
+        height: 6px!important;
+      }
+    </style>
+    <slot></slot>
+  </template>
+  <template id="bookmarks-list-template">
+    <style>
+      :host {
+        display: none;
+        grid-auto-flow: row;
+        grid-template-rows: repeat(auto-fit, 30px);
+        grid-template-columns: 300px;
+        grid-auto-columns: 300px;
+        grid-auto-rows: 30px;
+        max-height: none;
+        min-width: 300px;
+      }
+      :host([horiz]) {
+        grid-auto-flow: column!important;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))!important;
+        grid-auto-columns: minmax(200px, 1fr)!important;
+        max-height: 540px!important;
+      }
+      :host([active]) {
+        display: grid!important;
+      }
+    </style>
+    <slot></slot>
+  </template>
+  <template id="bookmark-item-template">
+    <style>
+      :host {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        height: 30px;
+        line-height: 30px;
+        padding-left: 10px;
+        background-color:inherit; 
+        contain: content;
+      }
+      :host(:hover) {
+        background-color: var(--hover-color);
+      }
+      :host(:active) {
+        background-color: var(--active-color);
+      }
+      :host([manage]) {
+        border-top-color: var(--line-color);
+        border-top-width: 1px;
+        border-top-style: solid;
+      }
+      img {
+        flex: 0 0 auto;
+        height: 16px;
+        width: 16px;
+        filter: var(--icon-filter);
+      }
+      :host([folder]) img{
+        background-color: inherit;
+        background-image: var(--folder-icon);
+        background-size: 16px 16px;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      :host([manage]) img{
+        background-color: inherit;
+        background-image: var(--manage-icon);
+        background-size: 16px 16px;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      span {
+        flex: 1 1 auto;
+        width: 100%;
+        margin-left: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    </style>
+    <img /><span></span>
+  </template>
+  <script type="module" src="qbm.js"></script>
 </head>
 <body>
-  <div id="bm-header">
-    <ul id="bm-path" class="bm-breadcrumb">
-    </ul>
-    <div id="bm-search-box" class="bm-hide">
-      <input type="text">
-    </div>
-    <div id="bm-search-btn"></div>
-  </div>
-  <div id="bm-msg" class="bm-hide"><span></span></div>
-  <div id="bm-lists" class="scrollbar-hide">
-    <div id="bm-search-list" class="bm-tree bm-hide"></div>
-  </div>
-  <div id="bm-manage" class="bm-item">
-    <span class="bm-icon"></span>
-    <span class="bm-text">Manage Favorites</span>
-  </div>
 </body>
 </html>

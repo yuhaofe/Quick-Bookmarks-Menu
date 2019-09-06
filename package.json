@@ -20,6 +20,7 @@
     "del": "^4.1.0",
     "gulp": "^4.0.0",
     "gulp-clean-css": "^4.0.0",
+    "gulp-minify-inline": "^1.1.0",
     "gulp-terser": "^1.1.7",
     "gulp-zip": "^4.2.0"
   }
