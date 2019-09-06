@@ -1,4 +1,5 @@
 import { BookmarkItem } from './bookmark-item.js';
+import QBM from '../global.js';
 
 // folder or search list
 export class BookmarksList extends HTMLElement {
@@ -12,7 +13,7 @@ export class BookmarksList extends HTMLElement {
     }
 
     connectedCallback(){
-        const scroll = this.ownerDocument.defaultView.qbm.scroll;
+        const scroll = QBM.scroll;
         if (scroll === 'x'){
             this.horiz = true;
         }

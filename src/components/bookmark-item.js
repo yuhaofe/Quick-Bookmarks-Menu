@@ -1,3 +1,4 @@
+import QBM from '../global.js';
 export class BookmarkItem extends HTMLElement {
     constructor() {
         super();
@@ -72,7 +73,7 @@ export class BookmarkItem extends HTMLElement {
     //#endregion
 
     _openUrl(){
-        const openIn = this.ownerDocument.defaultView.qbm.openIn;
+        const openIn = QBM.openIn;
         let active = false;
         switch (openIn) {
             case 'new':
@@ -90,12 +91,11 @@ export class BookmarkItem extends HTMLElement {
     }
 
     _openFolder(){
-        const qbm = this.ownerDocument.defaultView.qbm;
-        qbm.loadFolder(this._itemId);
+        QBM.loadFolder(this._itemId);
     }
 
     _addHoverEnter() {
-        this._hoverEnter = this.ownerDocument.defaultView.qbm.hoverEnter;
+        this._hoverEnter = QBM.hoverEnter;
         this._hoverEnterSpeed = {
             slow: 800,
             medium: 500,

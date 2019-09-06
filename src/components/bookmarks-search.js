@@ -1,3 +1,4 @@
+import QBM from '../global.js';
 export class BookmarksSearch extends HTMLElement {
     constructor(){
         super();
@@ -21,7 +22,7 @@ export class BookmarksSearch extends HTMLElement {
             clearTimeout(this._inputTimeout);
         }
         this._inputTimeout = setTimeout(() => {
-            this.ownerDocument.defaultView.qbm.searchBookmarks(this.$input.value);
+            QBM.searchBookmarks(this.$input.value);
         }, 400);
     }
 

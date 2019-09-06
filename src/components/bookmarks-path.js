@@ -1,4 +1,5 @@
 import { BookmarksPathItem } from './bookmarks-path-item.js';
+import QBM from '../global.js';
 
 export class BookmarksPath extends HTMLElement {
     constructor() {
@@ -40,14 +41,13 @@ export class BookmarksPath extends HTMLElement {
     }
 
     _insertItem(id, callback){
-        const qbm = this.ownerDocument.defaultView.qbm;
         const bmPathItem = new BookmarksPathItem();
         bmPathItem.itemId = id;
         chrome.bookmarks.get(id, results => {
             bmPathItem.text = results[0].title;
             if (id === '0') bmPathItem.text = chrome.i18n.getMessage("home");
             this._pathFragment.insertBefore(bmPathItem, this._pathFragment.firstElementChild);
-            if (id === this._rootId[qbm.root]) {
+            if (id === this._rootId[QBM.root]) {
                 callback();
                 return;
             }

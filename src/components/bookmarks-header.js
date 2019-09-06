@@ -1,5 +1,6 @@
 import { BookmarksSearch } from './bookmarks-search.js';
 import { BookmarksPath } from './bookmarks-path.js';
+import QBM from '../global.js';
 
 export class BookmarksHeader extends HTMLElement {
     constructor(){
@@ -12,8 +13,9 @@ export class BookmarksHeader extends HTMLElement {
         this.$msg = this._shadowRoot.querySelector('.msg');
         this.$path = new BookmarksPath();
         this.$search = new BookmarksSearch();
-        this.$path.hidden = false;
-        this.$search.hidden = true;
+        this.appendChild(this.$path);
+        this.appendChild(this.$search);
+
         this._toggle = ev => {
             if (this.$path.hidden){
                 this._showPath();
@@ -25,7 +27,7 @@ export class BookmarksHeader extends HTMLElement {
             this.$path.hidden = true;
             this.$search.hidden = false;
             this.ownerDocument.removeEventListener('keydown', this._showSearch);
-            this.ownerDocument.defaultView.qbm.searchBookmarks(this.$search.$input.value);
+            QBM.searchBookmarks(this.$search.$input.value);
             this.$search.$input.focus();
         }
         this._showPath = ev => {
@@ -39,8 +41,7 @@ export class BookmarksHeader extends HTMLElement {
     }
 
     connectedCallback(){
-        this.appendChild(this.$path);
-        this.appendChild(this.$search);
+        this._showPath();
         this.$button.addEventListener('click', this._toggle);
     }
 
