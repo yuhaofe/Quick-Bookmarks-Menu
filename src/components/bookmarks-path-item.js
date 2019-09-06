@@ -1,3 +1,5 @@
+import QBM from '../global.js';
+
 export class BookmarksPathItem extends HTMLElement {
     constructor() {
         super();
@@ -43,19 +45,17 @@ export class BookmarksPathItem extends HTMLElement {
 
     navigate(){
         if (this._itemId){
-            const qbm = this.ownerDocument.defaultView.qbm;
-            qbm.loadFolder(this._itemId);
+            QBM.loadFolder(this._itemId);
         }
     }
 
     _setStartup(){
         chrome.storage.local.set({ startup: this._itemId });
-        const header = this.ownerDocument.querySelector('bookmarks-header');
-        header.showMsg(`"${this.text}" ${chrome.i18n.getMessage("set_startup_done")}`);
+        QBM.$header.showMsg(`"${this.text}" ${chrome.i18n.getMessage("set_startup_done")}`);
     }
 
     _addHoverEnter() {
-        this._hoverEnter = this.ownerDocument.defaultView.qbm.hoverEnter;
+        this._hoverEnter = QBM.hoverEnter;
         this._hoverEnterSpeed = {
             slow: 800,
             medium: 500,

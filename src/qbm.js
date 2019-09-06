@@ -6,6 +6,7 @@ import { BookmarksPath } from './components/bookmarks-path.js';
 import { BookmarksSearch } from './components/bookmarks-search.js';
 import { BookmarksHeader } from './components/bookmarks-header.js';
 import { BookmarksManage } from './components/bookmarks-manage.js';
+import QBM from './global.js';
 
 window.customElements.define('bookmark-item', BookmarkItem);
 window.customElements.define('bookmarks-list', BookmarksList);
@@ -15,6 +16,41 @@ window.customElements.define('bookmarks-path', BookmarksPath);
 window.customElements.define('bookmarks-search', BookmarksSearch);
 window.customElements.define('bookmarks-header', BookmarksHeader);
 window.customElements.define('bookmarks-manage', BookmarksManage);
+
+window.oncontextmenu = function () {
+    return false;
+};
+
+chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll'], ({openIn, hoverEnter, startup, root, theme, scroll}) => {
+    QBM.openIn = openIn;
+    QBM.hoverEnter = hoverEnter;
+    QBM.root = root;
+    QBM.scroll = scroll;
+
+    applyTheme(theme);
+
+    QBM.$header = new BookmarksHeader();
+    QBM.$container = new BookmarksContainer();
+    QBM.$manage = new BookmarksManage();
+
+    QBM.loadFolder = (id) => {
+        QBM.$header.$path.createPath(id);
+        QBM.$container.showList(id);
+    };
+    QBM.searchBookmarks = (keyword) => {
+        QBM.$container.showList('-1', keyword);
+    }
+
+    QBM.loadFolder(startup);
+
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(QBM.$header);
+    fragment.appendChild(QBM.$container);
+    fragment.appendChild(QBM.$manage);
+
+    const body = document.querySelector('body');
+    body.appendChild(fragment);
+});
 
 function applyDarkTheme(style) {
     style.setProperty('--text-color', '#eeeeee');
@@ -68,35 +104,5 @@ function applyTheme(theme) {
             break;
     }
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    window.oncontextmenu = function () {
-        return false;
-    };
-    chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll'], ({openIn, hoverEnter, startup, root, theme, scroll}) => {
-        window.qbm = {openIn, hoverEnter, root, scroll};
-        applyTheme(theme);
-
-        const container = new BookmarksContainer();
-        const header = new BookmarksHeader();
-        const manage = new BookmarksManage();
-
-        window.qbm.loadFolder = (id) => {
-            header.$path.createPath(id);
-            container.showList(id);
-        };
-        window.qbm.searchBookmarks = (keyword) => {
-            container.showList('-1', keyword);
-        }
-
-        const body = document.querySelector('body');
-        body.appendChild(header);
-        body.appendChild(container);
-        body.appendChild(manage);
-
-        window.qbm.loadFolder(startup);
-    });
-});
-
 
 

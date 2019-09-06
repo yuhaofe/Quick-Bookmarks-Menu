@@ -1,4 +1,5 @@
 import { BookmarksList } from './bookmarks-list.js';
+import QBM from '../global.js';
 
 export class BookmarksContainer extends HTMLElement {
     constructor() {
@@ -10,7 +11,7 @@ export class BookmarksContainer extends HTMLElement {
     }
 
     connectedCallback(){
-        const scroll = this.ownerDocument.defaultView.qbm.scroll;
+        const scroll = QBM.scroll;
         if (scroll === 'x'){
             this.horiz = true;
             this.onwheel = e =>{
@@ -30,7 +31,7 @@ export class BookmarksContainer extends HTMLElement {
     }
 
     disconnectedCallback(){
-        // this._shadowRoot.host.classList.remove('horiz');
+        
     }
 
     // set id as '-1' to search keyword
