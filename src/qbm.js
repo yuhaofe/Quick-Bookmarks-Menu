@@ -70,6 +70,9 @@ function applyTheme(theme) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    window.oncontextmenu = function () {
+        return false;
+    };
     chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll'], ({openIn, hoverEnter, startup, root, theme, scroll}) => {
         window.qbm = {openIn, hoverEnter, root, scroll};
         applyTheme(theme);
