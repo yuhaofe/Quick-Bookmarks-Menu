@@ -11,6 +11,11 @@ A chrome extension gives you quick access to your bookmarks.
 
 [![Install from Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_206x58.png)](https://chrome.google.com/webstore/detail/quick-bookmarks-menu/fkemipdcgbeknabedhecepcebhlnlhbf)
 
+# Built with
+- [@pika/web](https://github.com/pikapkg/web) - Install npm dependencies to run directly in the browser. No Browserify, Webpack or import maps required. 
+- [preact](https://github.com/preactjs/preact) - Fast 3kB React alternative with the same modern API. 
+- [htm](https://github.com/developit/htm) -  JSX-like syntax in plain JavaScript - no transpiler necessary.
+- [goober](https://github.com/cristianbote/goober) - a less than 1KB css-in-js solution.
 # License
 Codes in this repository are licensed under MIT license.
 
