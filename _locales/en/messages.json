@@ -1,0 +1,74 @@
+{
+    "extname": {
+        "message": "Quick Bookmarks Menu"
+    },
+    "extdesc": {
+        "message": "Quick access to bookmarks or favorites."
+    },
+    "tooltip": {
+        "message": "Right click to access options"
+    },
+    "home": {
+        "message": "Root"
+    },
+    "manage": {
+        "message": "Manage Favorites"
+    },
+    "set_startup": {
+        "message": "Set as startup folder"
+    },
+    "set_startup_done": {
+        "message": "has been set as startup folder"
+    },
+    "open_in": {
+        "message": "Open bookmarks in..."
+    },
+    "open_in_new": {
+        "message": "New tab"
+    },
+    "open_in_current": {
+        "message": "Current tab"
+    },
+    "open_in_background": {
+        "message": "Background"
+    },
+    "hover_enter": {
+        "message": "Folder hover enter..."
+    },
+    "hover_enter_off": {
+        "message": "Off"
+    },
+    "hover_enter_slow": {
+        "message": "Slow"
+    },
+    "hover_enter_medium": {
+        "message": "Medium"
+    },
+    "hover_enter_fast": {
+        "message": "Fast"
+    },
+    "root_folder": {
+        "message": "Root folder..."
+    },
+    "color_theme": {
+        "message": "Theme..."
+    },
+    "auto": {
+        "message": "Auto"
+    },
+    "light": {
+        "message": "Light"
+    },
+    "dark": {
+        "message": "Dark"
+    },
+    "scroll_layout": {
+        "message": "Scroll layout..."
+    },
+    "scroll_layout_y": {
+        "message": "Vertical"
+    },
+    "scroll_layout_x": {
+        "message": "Horizontal"
+    }
+}

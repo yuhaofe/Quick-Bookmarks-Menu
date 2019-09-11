@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Preact + htm + goober</title>
+        <style>
+            :root {
+                --text-color: #000000;
+                --bg-color: #ffffff;
+                --hover-color: #efefef;
+                --active-color: #e5e5e5;
+                --line-color: #dbdbdb;
+                --msg-color: #daf0ff;
+                --folder-icon: url("../icons/folder.webp");
+                --search-icon: url("../icons/search.webp");
+                --manage-icon: url("../icons/manage.webp");
+                --icon-filter: contrast(1);
+                --startup-height: 600px;
+            }
+            body {
+                font-size: 12px;
+                color: var(--text-color);
+                background-color: var(--bg-color);
+                margin: 0px 0px;
+                padding: 0px;
+                display: flex;
+                flex-direction: column;
+                min-width: 300px;
+                max-width: 800px;
+                max-height: 600px;
+                height: auto;
+                user-select: none;
+                overflow: hidden;
+            }
+
+            body.startup {
+                height: var(--startup-height)!important;
+            }
+
+            body > :first-child {
+                flex: 0 0 auto;
+            }
+
+            body > :nth-child(2) {
+                flex: 1 1 auto;
+            }
+
+            body > :last-child, body > :last-child:hover,  body > :last-child:focus, body > :last-child:active {
+                flex: 0 0 auto;
+                box-sizing: content-box;
+                border-top-width: 1px!important;
+                border-top-color: var(--line-color);
+                border-top-style: solid;
+            }
+        </style>
+        <script type="module" src="./qbm.js"></script>
+    </head>
+    <body class="startup">
+
+    </body>
+</html>
