@@ -6,7 +6,7 @@ import { QbmItem } from '/src/components/qbm-item.js';
 const itemProps = {
     id: "",
     type: 'manage',
-    title: '管理',
+    title: chrome.i18n.getMessage("manage"),
     url: 'chrome://bookmarks'
 };
 
