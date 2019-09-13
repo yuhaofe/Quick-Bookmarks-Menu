@@ -6,13 +6,13 @@
         "message": "Quick access to bookmarks or favorites."
     },
     "tooltip": {
-        "message": "Right click to access options"
+        "message": "Quick Bookmarks Menu toolbar button.\nRight click to access options."
     },
     "home": {
         "message": "Root"
     },
     "manage": {
-        "message": "Manage Favorites"
+        "message": "Bookmarks manager"
     },
     "set_startup": {
         "message": "Set as startup folder"
@@ -21,7 +21,7 @@
         "message": "has been set as startup folder"
     },
     "open_in": {
-        "message": "Open bookmarks in..."
+        "message": "Open bookmarks in"
     },
     "open_in_new": {
         "message": "New tab"
@@ -33,7 +33,7 @@
         "message": "Background"
     },
     "hover_enter": {
-        "message": "Folder hover enter..."
+        "message": "Open folders by hovering"
     },
     "hover_enter_off": {
         "message": "Off"
@@ -48,10 +48,10 @@
         "message": "Fast"
     },
     "root_folder": {
-        "message": "Root folder..."
+        "message": "Root folder"
     },
     "color_theme": {
-        "message": "Theme..."
+        "message": "Theme"
     },
     "auto": {
         "message": "Auto"
@@ -63,7 +63,7 @@
         "message": "Dark"
     },
     "scroll_layout": {
-        "message": "Scroll layout..."
+        "message": "Scroll layout"
     },
     "scroll_layout_y": {
         "message": "Vertical"
