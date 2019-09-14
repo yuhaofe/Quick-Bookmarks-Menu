@@ -48,7 +48,7 @@ function QBM(props) {
                 <${NotifyContext.Provider} value=${ notify }>
                     <${HideContext.Provider} value=${ setItemHide }>
                         <${Fragment}>
-                            <${QbmHeader} page=${page} msgs=${msgs} clearMsg=${clearMsg}/>
+                            <${QbmHeader} page=${page} msgs=${msgs} clearMsg=${clearMsg} horiz=${props.config.scroll === 'x'}/>
                             <${QbmContainer} page=${page} hidden=${hidden}/>
                             <${QbmFooter} page=${page} hidden=${hidden}/>
                         <//>
