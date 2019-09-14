@@ -70,5 +70,17 @@
     },
     "scroll_layout_x": {
         "message": "Horizontal"
+    },
+    "show_hidden": {
+        "message": "Show hidden items"
+    },
+    "hidden_list": {
+        "message": "Hidden Items"
+    },
+    "set_hidden": {
+        "message": "has been hidden."
+    },
+    "set_hidden_off": {
+        "message": "has been visible."
     }
 }

@@ -10,6 +10,7 @@ const Header = styled('div')`
     height: 30px;
     line-height: 30px;
     border-bottom: 1px solid var(--line-color);
+    position: relative;
 
     display: flex;
     flex-direction: row;
@@ -36,6 +37,12 @@ const Search = styled('input')`
         outline: none;
         background-color: var(--hover-color);
     }
+`;
+const Hidden = styled('div')`
+    flex: 1 1 auto;
+    display: ${props => props.active ? "inline":"none"};
+    text-align: center;
+    font-weight: bold;
 `;
 const Button = styled('button')`
     flex: 0 0 auto;
@@ -67,14 +74,23 @@ const MsgBanner = styled('div')`
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    height: 30px;
-    line-height: 30px;
+    height: 100%;
+    width: 100%;
+
     background-color: var(--msg-color);
     font-weight: bold;
     flex-direction: row;
     justify-content: center;
-    z-index: 3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: var(--z-index-overlay);
+`;
+const MsgTarget = styled('span')`
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 //#endregion
 
@@ -85,7 +101,9 @@ function QbmMsg(props) {
     }, 1000);
     return html`
         <${MsgBanner}>
-            <span>${props.msg}</span>
+            ${props.msg.target && 
+                html`"<${MsgTarget}>${props.msg.target}<//>"`
+            }<span> ${props.msg.action}</span>
         <//>
     `;
 }
@@ -123,7 +141,9 @@ export function QbmHeader(props) {
     };
 
     const toggleSearch = () => {
-        setLastId(props.page.key);
+        if(props.page.type === 'folder'){
+            setLastId(props.page.key);
+        }
         navigate('search', '');
         document.removeEventListener('keydown', toggleSearch);
     };
@@ -160,16 +180,16 @@ export function QbmHeader(props) {
             if (keyword && keyword.length > 1)
                 navigate('search', keyword);
         }, 400);
-    }
+    };
 
     const switchView = () => {
-        if(props.page.type === 'folder') {
+        if(props.page.type != 'search') {
             toggleSearch();
-        }
-        if(props.page.type === 'search') {
+        }else{
             navigate('folder', lastId);
         }
-    }
+    };
+
     return html`
         <${Header}>
             <${Path} empty=${empty} active=${props.page.type === 'folder'}>
@@ -178,6 +198,7 @@ export function QbmHeader(props) {
                 `)}
             <//>
             <${Search} type="text" onInput=${onInput} value=${props.page.key} ref=${searchInput} active=${props.page.type === 'search'}/>
+            <${Hidden} active=${props.page.type === 'hidden'}>${chrome.i18n.getMessage("hidden_list")}<//>
             <${Button} onClick=${switchView} aria-label="toggle search"/>
             ${props.msgs.map(msg => html`
                 <${QbmMsg} msg=${msg} onClose=${props.clearMsg} />

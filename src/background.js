@@ -31,14 +31,16 @@ function colorThemeChanged(theme){
     }
 }
 
-chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll'], ({ openIn, hoverEnter, startup, root, theme, scroll}) => {
+chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], ({ openIn, hoverEnter, startup, root, theme, scroll, hidden, showHidden}) => {
     const qbm = {
         startup: ['1', 18],
         openIn: 'new',
         hoverEnter: 'medium',
         root: 'root',
         theme: 'auto',
-        scroll: 'y'
+        scroll: 'y',
+        hidden: [],
+        showHidden: false
     };
 
     if (!startup) {
@@ -78,6 +80,18 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 's
         chrome.storage.local.set({ scroll } = qbm);
     } else {
         qbm.scroll = scroll;
+    }
+
+    if (!hidden) {
+        chrome.storage.local.set({ hidden } = qbm);
+    } else {
+        qbm.hidden = hidden;
+    }
+
+    if (!showHidden) {
+        chrome.storage.local.set({ showHidden } = qbm);
+    } else {
+        qbm.showHidden = showHidden;
     }
 
     //#region open in menus
@@ -273,9 +287,19 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 's
         contexts: ['browser_action']
     });
     //#endregion
+
+    //#region show hidden menus
+    chrome.contextMenus.create({
+        id: 'show_hidden',
+        title: chrome.i18n.getMessage("show_hidden"),
+        type: 'checkbox',
+        checked: qbm.showHidden,
+        contexts: ['browser_action']
+    });
+    //#endregion
 });
 
-chrome.contextMenus.onClicked.addListener(({ menuItemId, parentMenuItemId }) => {
+chrome.contextMenus.onClicked.addListener(({ menuItemId, parentMenuItemId, wasChecked}) => {
     const open_in = {
         key: 'openIn',
         open_in_new: 'new',
@@ -313,18 +337,25 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId, parentMenuItemId }) => 
         color_theme,
         scroll_layout
     };
-    const parentMenu = menus[parentMenuItemId];
-    chrome.storage.local.set({ [parentMenu.key]: parentMenu[menuItemId] });
-    
-    if (parentMenu.key === 'root'){
-        const rootId = {
-            root: '0',
-            bar: '1',
-            other: '2'
+    const checkboxMenusKey = {
+        show_hidden: 'showHidden'
+    };
+    if (parentMenuItemId){
+        const parentMenu = menus[parentMenuItemId];
+        chrome.storage.local.set({ [parentMenu.key]: parentMenu[menuItemId] });
+        
+        if (parentMenu.key === 'root'){
+            const rootId = {
+                root: '0',
+                bar: '1',
+                other: '2'
+            }
+            chrome.storage.local.set({ startup: [rootId[parentMenu[menuItemId]], 18] });
         }
-        chrome.storage.local.set({ startup: [rootId[parentMenu[menuItemId]], 18] });
-    }
-    if (parentMenu.key === 'theme'){
-        colorThemeChanged(parentMenu[menuItemId]);
+        if (parentMenu.key === 'theme'){
+            colorThemeChanged(parentMenu[menuItemId]);
+        }
+    }else{
+        chrome.storage.local.set({ [checkboxMenusKey[menuItemId]]: !wasChecked });
     }
 });
