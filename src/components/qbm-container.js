@@ -20,9 +20,13 @@ const Container = styled('div')`
     }
 
     &::-webkit-scrollbar {
-        display: ${props=> props.scroll ? "initial!important" : "none" };
+        display: none;
         width: 6px;
         height: 6px;
+    }
+
+    &[scroll]::-webkit-scrollbar {
+        display: initial!important;
     }
 `;
 //#endregion
@@ -136,7 +140,6 @@ export function QbmContainer(props) {
     const [lists, loadBookmarks] = useBookmarks(props.page, props.hidden,()=>{
         containerRef.current && (containerRef.current.base.scrollTo(0, 0));
     });
-    const [scroll, setScroll] = useState(false);
     const config = useContext(ConfigContext);
     const horiz = config.scroll === 'x';
 
@@ -148,12 +151,12 @@ export function QbmContainer(props) {
     };
 
     const onScroll = () => {
-        setScroll(true);
+        containerRef.current && containerRef.current.base.setAttribute('scroll', '');
         if (this._hideScroll) {
             clearTimeout(this._hideScroll);
         }
         this._hideScroll = setTimeout(() => {
-            setScroll(false);
+            containerRef.current && containerRef.current.base.removeAttribute('scroll');
         }, 400);
     };
 
@@ -165,7 +168,7 @@ export function QbmContainer(props) {
 
     loadBookmarks(props.page, props.hidden);
     return html`
-        <${Container} scroll=${scroll} horiz=${horiz} onScroll=${onScroll} onWheel=${onWheel} ref=${containerRef}>
+        <${Container} horiz=${horiz} onScroll=${onScroll} onWheel=${onWheel} ref=${containerRef}>
             ${lists.map(list => html`
                 <${QbmList} key=${list.type === 'search' ? 'search' : list.key} active=${list.active} 
                     horiz=${horiz} list=${list.items} hidden=${props.hidden}/>
