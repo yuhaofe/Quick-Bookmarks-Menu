@@ -9,6 +9,7 @@ import { QbmPathItem } from '/src/components/qbm-path-item.js';
 const Header = styled('div')`
     height: 30px;
     line-height: 30px;
+    max-width: ${props => props.horiz ? "none" : "300px"};
     border-bottom: 1px solid var(--line-color);
     position: relative;
 
@@ -16,19 +17,19 @@ const Header = styled('div')`
     flex-direction: row;
 `;
 const Path = styled('div')`
-    flex: 1 1 auto;
+    flex: auto;
     display: ${props => props.active ? "flex":"none"};
     flex-direction: row;
     flex-wrap: nowrap;
     height: 30px;
     line-height: 30px;
+    min-width: 200px;
     background-color: ${props => props.empty ? "inherit":"var(--line-color)"};
     padding: 0px;
     margin: 0px;
-
 `;
 const Search = styled('input')`
-    flex: 1 1 auto;
+    flex: auto;
     display: ${props => props.active ? "flex":"none"};
     padding-left: 10px;
     user-select: text;
@@ -39,14 +40,15 @@ const Search = styled('input')`
     }
 `;
 const Hidden = styled('div')`
-    flex: 1 1 auto;
+    flex: auto;
     display: ${props => props.active ? "inline":"none"};
     text-align: center;
     font-weight: bold;
 `;
 const Button = styled('button')`
-    flex: 0 0 auto;
-    height: 100%;
+    flex: none;
+
+    height: 30px;
     width: 30px;
     border: none;
     border-left: 1px solid var(--line-color);
@@ -191,7 +193,7 @@ export function QbmHeader(props) {
     };
 
     return html`
-        <${Header}>
+        <${Header} horiz=${props.horiz}>
             <${Path} empty=${empty} active=${props.page.type === 'folder'}>
                 ${paths.map(path=> html`
                     <${QbmPathItem} ...${path} />
