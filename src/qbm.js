@@ -5,13 +5,14 @@ import { useState, useEffect } from '/web_modules/preact/hooks.js';
 
 import { QbmHeader } from '/src/components/qbm-header.js';
 import { QbmContainer } from '/src/components/qbm-container.js';
-import { QbmManage } from '/src/components/qbm-manage.js';
+import { QbmFooter } from '/src/components/qbm-footer.js';
 
 setPragma(h);
 
 const NavContext = createContext('navigate');
 const ConfigContext = createContext('config');
 const NotifyContext = createContext('notify');
+const HideContext = createContext('hide');
 
 function QBM(props) {
     const [page, setPage] = useState({
@@ -19,6 +20,8 @@ function QBM(props) {
         key: props.config.startup[0]
     });
     const [msgs, setMsgs] = useState([]);
+    const [hidden, setHidden] = useState(props.config.hidden);
+
     const navigate = (type, key) => {
         setPage({ type, key });
     };
@@ -28,15 +31,27 @@ function QBM(props) {
     const clearMsg = () => {
         setMsgs([]);
     };
-    
+    const setItemHide = (key) => {
+        let newHidden;
+        if (hidden.includes(key)) {
+            newHidden = hidden.filter(e => e != key);
+        }else{
+            newHidden = hidden.concat([key]);
+        }
+        chrome.storage.local.set({ hidden: newHidden }, ()=>{
+            setHidden(newHidden);
+        });
+    };
     return html`
         <${NavContext.Provider} value=${ navigate }>
             <${ConfigContext.Provider} value=${ props.config }>
                 <${NotifyContext.Provider} value=${ notify }>
-                    <${Fragment}>
-                        <${QbmHeader} page=${page} msgs=${msgs} clearMsg=${clearMsg}/>
-                        <${QbmContainer} page=${page} />
-                        <${QbmManage} />
+                    <${HideContext.Provider} value=${ setItemHide }>
+                        <${Fragment}>
+                            <${QbmHeader} page=${page} msgs=${msgs} clearMsg=${clearMsg}/>
+                            <${QbmContainer} page=${page} hidden=${hidden}/>
+                            <${QbmFooter} page=${page} hidden=${hidden}/>
+                        <//>
                     <//>
                 <//>
             <//>
@@ -50,7 +65,7 @@ window.oncontextmenu = function () {
 };
 
 // {openIn, hoverEnter, startup, root, theme, scroll}
-chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll'], result => {    
+chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {    
     applyTheme(result.theme);
     adjustHeight(result.startup[1]);
     render(html`<${QBM} config=${result}/>`, document.body);
@@ -99,6 +114,8 @@ function applyDarkTheme(style) {
     style.setProperty('--folder-icon', 'url("../icons/folder-dark.webp")');
     style.setProperty('--search-icon', 'url("../icons/search-dark.webp")');
     style.setProperty('--manage-icon', 'url("../icons/manage-dark.webp")');
+    style.setProperty('--eye-icon', 'url("../icons/eye-dark.webp")');
+    style.setProperty('--eye-slash-icon', 'url("../icons/eye-slash-dark.webp")');
     style.setProperty('--icon-filter', 'contrast(0.8)');
 }
 
@@ -112,7 +129,9 @@ function applyLightTheme(style) {
     style.setProperty('--folder-icon', 'url("../icons/folder.webp")');
     style.setProperty('--search-icon', 'url("../icons/search.webp")');
     style.setProperty('--manage-icon', 'url("../icons/manage.webp")');
+    style.setProperty('--eye-icon', 'url("../icons/eye.webp")');
+    style.setProperty('--eye-slash-icon', 'url("../icons/eye-slash.webp")');
     style.setProperty('--icon-filter', 'contrast(1)');
 }
 
-export { NavContext, ConfigContext, NotifyContext };
+export { NavContext, ConfigContext, NotifyContext, HideContext };

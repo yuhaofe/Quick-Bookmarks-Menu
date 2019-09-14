@@ -17,11 +17,12 @@ const List = styled('div')`
 //#endregion
 
 export function QbmList(props) {
+
     return html`
         <${List} active=${props.active} horiz=${props.horiz}>
             ${props.list.map(item => html`
                 <${QbmItem} key=${item.id} id=${item.id} type=${item.url ? "link" : "folder"} 
-                    title=${item.title} url=${item.url} />
+                    title=${item.title} url=${item.url} active=${!props.hidden.includes(item.id)}/>
             `)}
         <//>
     `;

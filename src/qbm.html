@@ -13,9 +13,19 @@
                 --folder-icon: url("../icons/folder.webp");
                 --search-icon: url("../icons/search.webp");
                 --manage-icon: url("../icons/manage.webp");
+                --eye-icon: url("../icons/eye.webp");
+                --eye-slash-icon: url("../icons/eye-slash.webp");
                 --icon-filter: contrast(1);
                 --startup-height: 600px;
+                --z-index-modal: 1000;
+                --z-index-overlay: 900;
             }
+
+            html {
+                overflow: hidden;
+                user-select: none;
+            }
+
             body {
                 font-size: 12px;
                 color: var(--text-color);
@@ -28,7 +38,6 @@
                 max-width: 800px;
                 max-height: 600px;
                 height: auto;
-                user-select: none;
                 overflow: hidden;
             }
 
@@ -44,7 +53,7 @@
                 flex: 1 1 auto;
             }
 
-            body > :last-child, body > :last-child:hover,  body > :last-child:focus, body > :last-child:active {
+            body > :nth-child(3), body > :nth-child(3):hover,  body > :nth-child(3):focus, body > :nth-child(3):active {
                 flex: 0 0 auto;
                 box-sizing: content-box;
                 border-top-width: 1px!important;

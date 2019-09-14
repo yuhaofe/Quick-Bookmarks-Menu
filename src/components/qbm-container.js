@@ -27,61 +27,113 @@ const Container = styled('div')`
 `;
 //#endregion
 
-const useBookmarks = (initialPage, callback) => {
+const useBookmarks = (initialPage, initialHidden, callback) => {
     const [lists, setLists] = useState([]);
     const [page, setPage] = useState(initialPage);
+    const [hidden, setHidden] = useState(initialHidden);
 
     const hideLists = () => {
         lists.filter(list => list.active).forEach(list => list.active = false);
     };
 
-    useEffect(()=>{
-        if(page.type === 'folder'){
-            const existList = lists.find(list => list.key === page.key);
-        
-            if (existList){
-                hideLists();
-                existList.active = true;
-                setLists([...lists]);
-            }else{
-                chrome.bookmarks.getChildren(page.key, results => {
-                    const newList = {
-                        type: 'folder',
-                        key: page.key,
-                        active: true,
-                        items: results
-                    }
-                    hideLists();
-                    setLists([...lists, newList]);
-                })
+    const loadHiddenList = () => {
+        let hiddenList = lists.find(list => list.type === 'hidden');
+        if (!hiddenList) {
+            hiddenList = {
+                type: 'hidden',
+                key: '',
+                items: [],
+                active: false
             }
-        }else if (page.type === 'search'){
-            let searchList = lists.find(list => list.type === 'search');
-            if (!searchList) {
-                searchList = {
-                    type: 'search',
-                    key: page.key,
-                    items: [],
-                    active: false
-                }
-                lists.push(searchList);
-            }
-            chrome.bookmarks.search(page.key, results => {
-                searchList.items = results;
-                hideLists();
-                searchList.active = true;
-                setLists([...lists]);
-            });
+            lists.push(hiddenList);
         }
+        const hiddenItems = [];
+        const searchHidden = (parent) => {
+            if (parent.children !== null && typeof parent.children == "object"){
+                parent.children.forEach(item => {
+                    if (hidden.includes(item.id)){
+                        hiddenItems.push(item);
+                    }
+                    searchHidden(item);
+                });
+            }else{
+                return;
+            }
+        };
+        chrome.bookmarks.getTree(root => {
+            searchHidden(root[0]);
+            hiddenList.items = hiddenItems;
+            hideLists();
+            hiddenList.active = true;
+            setLists([...lists]);
+        });
+    };
+
+    useEffect(()=>{
+        switch (page.type) {
+            case 'folder':
+                const existList = lists.find(list => list.key === page.key);
+                if (existList){
+                    hideLists();
+                    existList.active = true;
+                    setLists([...lists]);
+                }else{
+                    chrome.bookmarks.getChildren(page.key, results => {
+                        const newList = {
+                            type: 'folder',
+                            key: page.key,
+                            active: true,
+                            items: results
+                        }
+                        hideLists();
+                        setLists([...lists, newList]);
+                    })
+                }
+                break;
+
+            case 'search':
+                let searchList = lists.find(list => list.type === 'search');
+                if (!searchList) {
+                    searchList = {
+                        type: 'search',
+                        key: page.key,
+                        items: [],
+                        active: false
+                    }
+                    lists.push(searchList);
+                }
+                chrome.bookmarks.search(page.key, results => {
+                    searchList.items = results;
+                    hideLists();
+                    searchList.active = true;
+                    setLists([...lists]);
+                });
+                break;
+
+            case 'hidden':
+                loadHiddenList();
+                break;
+            default:
+                break;
+        }
+
         callback();
     }, [page]);
 
-    return [lists, setPage];
+    useEffect(()=>{
+        if (page.type != 'hidden') return;
+        loadHiddenList();
+    }, [hidden]);
+
+    return [lists, (page, hidden)=>{
+        setPage(page);
+        setHidden(hidden);
+    }];
 };
 
 export function QbmContainer(props) {
     const containerRef = useRef(null);
-    const [lists, loadBookmarks] = useBookmarks(props.page, ()=>{
+    const [lists, loadBookmarks] = useBookmarks(props.page, props.hidden,()=>{
         containerRef.current && (containerRef.current.base.scrollTo(0, 0));
     });
     const [scroll, setScroll] = useState(false);
@@ -111,11 +163,12 @@ export function QbmContainer(props) {
         }
     }, [lists]);
 
-    loadBookmarks(props.page);
+    loadBookmarks(props.page, props.hidden);
     return html`
         <${Container} scroll=${scroll} horiz=${horiz} onScroll=${onScroll} onWheel=${onWheel} ref=${containerRef}>
             ${lists.map(list => html`
-                <${QbmList} key=${list.type === 'search' ? 'search' : list.key} active=${list.active} horiz=${horiz} list=${list.items}/>
+                <${QbmList} key=${list.type === 'search' ? 'search' : list.key} active=${list.active} 
+                    horiz=${horiz} list=${list.items} hidden=${props.hidden}/>
             `)}
         <//>
     `;

@@ -70,5 +70,17 @@
     },
     "scroll_layout_x": {
         "message": "横向"
+    },
+    "show_hidden": {
+        "message": "显示隐藏项目"
+    },
+    "hidden_list": {
+        "message": "已隐藏的项目"
+    },
+    "set_hidden": {
+        "message": "已被隐藏"
+    },
+    "set_hidden_off": {
+        "message": "已取消隐藏"
     }
 }

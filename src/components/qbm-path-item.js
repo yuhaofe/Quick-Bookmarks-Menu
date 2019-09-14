@@ -146,7 +146,7 @@ export function QbmPathItem(props) {
         if (props.last) {
             chrome.bookmarks.getChildren(props.id, results => {
                 chrome.storage.local.set({ startup: [props.id, results.length] });
-                notify(`"${props.title}" ${chrome.i18n.getMessage("set_startup_done")}`);
+                notify({target: props.title, action: chrome.i18n.getMessage("set_startup_done")});
             });
         }else{
             openFolder();
