@@ -1,0 +1,11 @@
+{
+    "extname": {
+        "message": "Quick Bookmarks Menu"
+    },
+    "extdesc": {
+        "message": "This is a description."
+    },
+    "tooltip": {
+        "message": "This is a tool tip."
+    }
+}
