@@ -1,7 +1,7 @@
-import { html } from '/web_modules/htm/preact.js';
-import { styled, css } from '/web_modules/goober.js';
-import { useState, useContext } from '/web_modules/preact/hooks.js';
-import { NavContext, ConfigContext, HideContext, NotifyContext } from '/src/qbm.js';
+import { html } from 'htm/preact';
+import { styled, css } from 'goober';
+import { useState, useContext } from 'preact/hooks';
+import { NavContext, ConfigContext, HideContext, NotifyContext } from '../qbm.js';
 
 //#region css
 
