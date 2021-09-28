@@ -1,9 +1,9 @@
-import { html } from '/web_modules/htm/preact.js';
-import { styled } from '/web_modules/goober.js';
-import { useState, useEffect, useContext, useRef } from '/web_modules/preact/hooks.js';
+import { html } from 'htm/preact';
+import { styled } from 'goober';
+import { useState, useEffect, useContext, useRef } from 'preact/hooks';
 
-import { NavContext, ConfigContext } from '/src/qbm.js';
-import { QbmItem } from '/src/components/qbm-item.js';
+import { NavContext, ConfigContext } from '../qbm.js';
+import { QbmItem } from '../components/qbm-item.js';
 
 //#region css
 const Footer = styled('div')`

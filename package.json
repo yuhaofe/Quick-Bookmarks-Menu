@@ -4,9 +4,10 @@
   "description": "A chrome extension gives you quick access to your bookmarks.",
   "main": "src/qbm.html",
   "scripts": {
-    "pika": "pika install",
-    "build": "gulp build",
-    "pack": "gulp pack"
+    "dev": "snowpack build --watch",
+    "build": "snowpack build",
+    "prepack": "npm run build",
+    "pack": "zip -r build/build.zip build/"
   },
   "keywords": [],
   "repository": {
@@ -25,19 +26,6 @@
     "preact": "^10.0.0-rc.1"
   },
   "devDependencies": {
-    "@pika/web": "^0.5.3",
-    "del": "^5.1.0",
-    "gulp": "^4.0.2",
-    "gulp-terser": "^1.2.0",
-    "gulp-zip": "^5.0.0"
-  },
-  "@pika/web": {
-    "webDependencies": [
-      "goober",
-      "htm",
-      "preact",
-      "preact/hooks",
-      "htm/preact"
-    ]
+    "snowpack": "^3.8.8"
   }
 }
