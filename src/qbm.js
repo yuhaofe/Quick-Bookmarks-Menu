@@ -1,11 +1,11 @@
-import { h, render, Fragment, createContext } from '/web_modules/preact.js';
-import { html } from '/web_modules/htm/preact.js';
-import { setPragma } from '/web_modules/goober.js';
-import { useState, useEffect } from '/web_modules/preact/hooks.js';
+import { h, render, Fragment, createContext } from 'preact';
+import { html } from 'htm/preact';
+import { setPragma } from 'goober';
+import { useState, useEffect } from 'preact/hooks';
 
-import { QbmHeader } from '/src/components/qbm-header.js';
-import { QbmContainer } from '/src/components/qbm-container.js';
-import { QbmFooter } from '/src/components/qbm-footer.js';
+import { QbmHeader } from './components/qbm-header.js';
+import { QbmContainer } from './components/qbm-container.js';
+import { QbmFooter } from './components/qbm-footer.js';
 
 setPragma(h);
 

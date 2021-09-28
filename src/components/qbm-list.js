@@ -1,7 +1,7 @@
-import { html } from '/web_modules/htm/preact.js';
-import { styled } from '/web_modules/goober.js';
+import { html } from 'htm/preact';
+import { styled } from 'goober';
 
-import { QbmItem } from '/src/components/qbm-item.js'
+import { QbmItem } from '../components/qbm-item.js'
 
 //#region css
 const List = styled('div')`
