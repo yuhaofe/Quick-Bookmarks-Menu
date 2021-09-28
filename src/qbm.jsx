@@ -1,12 +1,12 @@
 import { h, render, Fragment, createContext } from 'preact';
-import { setPragma } from 'goober';
+import { setup } from 'goober';
 import { useState, useEffect } from 'preact/hooks';
 
 import { QbmHeader } from './components/qbm-header.jsx';
 import { QbmContainer } from './components/qbm-container.jsx';
 import { QbmFooter } from './components/qbm-footer.jsx';
 
-setPragma(h);
+setup(h);
 
 const NavContext = createContext('navigate');
 const ConfigContext = createContext('config');

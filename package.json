@@ -21,8 +21,8 @@
   },
   "homepage": "https://github.com/flyhaozi/Quick-Bookmarks-Menu#readme",
   "dependencies": {
-    "goober": "^1.4.0",
-    "preact": "^10.0.0-rc.1"
+    "goober": "^2.0.41",
+    "preact": "^10.5.14"
   },
   "devDependencies": {
     "snowpack": "^3.8.8"
