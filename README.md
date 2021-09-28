@@ -16,10 +16,10 @@ A chrome extension gives you quick access to your bookmarks.
 
 ## Built with
 - [snowpack](https://github.com/snowpackjs/snowpack) - ESM-powered frontend build tool. Instant, lightweight, unbundled development. ✌️
-- <s>[@pika/web](https://github.com/pikapkg/web) - Install npm dependencies to run directly in the browser. No Browserify, Webpack or import maps required. </s>
 - [preact](https://github.com/preactjs/preact) - Fast 3kB React alternative with the same modern API. 
-- [htm](https://github.com/developit/htm) -  JSX-like syntax in plain JavaScript - no transpiler necessary.
 - [goober](https://github.com/cristianbote/goober) - a less than 1KB css-in-js solution.
+- <s>[@pika/web](https://github.com/pikapkg/web) - Install npm dependencies to run directly in the browser. No Browserify, Webpack or import maps required.</s> (Now becomes snowpack)
+- <s>[htm](https://github.com/developit/htm) -  JSX-like syntax in plain JavaScript - no transpiler necessary.</s> (Replaced by snowpack jsx compiler)
 ## License
 Codes in this repository are licensed under MIT license.
 
