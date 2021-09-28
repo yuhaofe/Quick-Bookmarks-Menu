@@ -12,8 +12,9 @@ const Container = styled('div')`
     position: relative;
     overflow-y: ${props => props.horiz ? "hidden" : "auto"};
     overflow-x: ${props => props.horiz ? "auto" : "hidden"};
-    max-width: ${props => props.horiz ? "none" : "300px"};
-
+    max-width: 800px;
+    min-width: 300px;
+    width: ${props => props.horiz ? ((Math.trunc((props.count - 1) / 18) + 1) * 200 + "px") : "300px"};
     &::-webkit-scrollbar-thumb {
         border-radius: 3px;
         background: var(--active-color);
@@ -168,7 +169,12 @@ export function QbmContainer(props) {
 
     loadBookmarks(props.page, props.hidden);
     return (
-        <Container horiz={horiz} onScroll={onScroll} onWheel={onWheel} ref={containerRef}>
+        <Container horiz={horiz} count={ 
+            (() => {
+                const activeList = lists.find(list => list.active);
+                return activeList ? activeList.items.length : 0;
+            })()
+        } onScroll={onScroll} onWheel={onWheel} ref={containerRef}>
             { lists.map(list => 
                 <QbmList key={list.type === 'search' ? 'search' : list.key} active={list.active} 
                     horiz={horiz} list={list.items} hidden={props.hidden}/>
