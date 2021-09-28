@@ -1,0 +1,18 @@
+name: build-and-pack
+on: pull_request
+jobs:
+  build-and-pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+      - run: npm i -g npm@7
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build/
