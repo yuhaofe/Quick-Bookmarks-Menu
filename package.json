@@ -1,6 +1,6 @@
 {
   "name": "quick-bookmarks-menu",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A chrome extension gives you quick access to your bookmarks.",
   "main": "src/qbm.html",
   "scripts": {
