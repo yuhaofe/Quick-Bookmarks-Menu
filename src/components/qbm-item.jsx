@@ -1,7 +1,7 @@
-import { html } from 'htm/preact';
+import { h } from 'preact';
 import { styled, css } from 'goober';
 import { useState, useContext } from 'preact/hooks';
-import { NavContext, ConfigContext, HideContext, NotifyContext } from '../qbm.js';
+import { NavContext, ConfigContext, HideContext, NotifyContext } from '../qbm.jsx';
 
 //#region css
 
@@ -194,20 +194,20 @@ export function QbmItem(props) {
         });
     };
 
-    return html`
-        <${ItemContainer} active=${props.active} showHidden=${config.showHidden} onMouseLeave=${() => setMenuActive(false)}>
-            <${ItemBtn} role="link" tabIndex="0" title=${props.type==='link' ? props.title + "\n" + props.url : ""}
-                type=${props.type} onClick=${onClick} onMouseOver=${onMouseOver} onMouseOut=${onMouseOut} onWheel=${onMouseOut}
-                onContextMenu=${onContextMenu}>
-                <${Icon} src=${props.type==='link'? "chrome://favicon/" + props.url 
-                    : "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} type=${props.type} />
-                <${Text}>
-                    ${props.title}
-                <//>
-            <//>
-            <${Menu} active=${menuActive}> 
-                <${HideBtn} onClick=${onHiddenClick} slash=${!props.active}/>
-            <//>
-        <//>
-    `;
+    return (
+        <ItemContainer active={props.active} showHidden={config.showHidden} onMouseLeave={() => setMenuActive(false)}>
+            <ItemBtn role="link" tabIndex="0" title={props.type==='link' ? props.title + "\n" + props.url : ""}
+                type={props.type} onClick={onClick} onMouseOver={onMouseOver} onMouseOut={onMouseOut} onWheel={onMouseOut}
+                onContextMenu={onContextMenu}>
+                <Icon src={props.type==='link'? "chrome://favicon/" + props.url 
+                    : "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} type={props.type} />
+                <Text>
+                    {props.title}
+                </Text>
+            </ItemBtn>
+            <Menu active={menuActive}> 
+                <HideBtn onClick={onHiddenClick} slash={!props.active} />
+            </Menu>
+        </ItemContainer>
+    );
 }

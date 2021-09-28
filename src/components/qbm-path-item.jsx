@@ -1,8 +1,8 @@
-import { html } from 'htm/preact';
+import { h } from 'preact';
 import { styled } from 'goober';
 import { useContext } from 'preact/hooks';
 
-import { NavContext, ConfigContext, NotifyContext } from '../qbm.js';
+import { NavContext, ConfigContext, NotifyContext } from '../qbm.jsx';
 
 //#region css
 const PathItem = styled('button')`
@@ -153,10 +153,10 @@ export function QbmPathItem(props) {
         }
     };
 
-    return html`
-        <${PathItem} role="link" tabIndex="0" onClick=${onClick} onMouseOver=${onMouseOver}
-            onMouseOut=${onMouseOut} title=${props.last ? chrome.i18n.getMessage("set_startup"):""}>
-            <${Text} >${props.title}<//>
-        <//>
-    `;
+    return (
+        <PathItem role="link" tabIndex="0" onClick={onClick} onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut} title={props.last ? chrome.i18n.getMessage("set_startup"):""}>
+            <Text >{props.title}</Text>
+        </PathItem>
+    );
 }
