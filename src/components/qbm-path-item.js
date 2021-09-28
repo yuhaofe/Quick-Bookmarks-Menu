@@ -1,8 +1,8 @@
-import { html } from '/web_modules/htm/preact.js';
-import { styled } from '/web_modules/goober.js';
-import { useContext } from '/web_modules/preact/hooks.js';
+import { html } from 'htm/preact';
+import { styled } from 'goober';
+import { useContext } from 'preact/hooks';
 
-import { NavContext, ConfigContext, NotifyContext } from '/src/qbm.js';
+import { NavContext, ConfigContext, NotifyContext } from '../qbm.js';
 
 //#region css
 const PathItem = styled('button')`
