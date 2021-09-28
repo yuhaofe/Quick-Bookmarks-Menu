@@ -1,11 +1,10 @@
 import { h, render, Fragment, createContext } from 'preact';
-import { html } from 'htm/preact';
 import { setPragma } from 'goober';
 import { useState, useEffect } from 'preact/hooks';
 
-import { QbmHeader } from './components/qbm-header.js';
-import { QbmContainer } from './components/qbm-container.js';
-import { QbmFooter } from './components/qbm-footer.js';
+import { QbmHeader } from './components/qbm-header.jsx';
+import { QbmContainer } from './components/qbm-container.jsx';
+import { QbmFooter } from './components/qbm-footer.jsx';
 
 setPragma(h);
 
@@ -42,21 +41,21 @@ function QBM(props) {
             setHidden(newHidden);
         });
     };
-    return html`
-        <${NavContext.Provider} value=${ navigate }>
-            <${ConfigContext.Provider} value=${ props.config }>
-                <${NotifyContext.Provider} value=${ notify }>
-                    <${HideContext.Provider} value=${ setItemHide }>
-                        <${Fragment}>
-                            <${QbmHeader} page=${page} msgs=${msgs} clearMsg=${clearMsg} horiz=${props.config.scroll === 'x'}/>
-                            <${QbmContainer} page=${page} hidden=${hidden}/>
-                            <${QbmFooter} page=${page} hidden=${hidden}/>
-                        <//>
-                    <//>
-                <//>
-            <//>
-        <//>
-    `;
+    return (
+        <NavContext.Provider value={ navigate }>
+            <ConfigContext.Provider value={ props.config }>
+                <NotifyContext.Provider value={ notify }>
+                    <HideContext.Provider value={ setItemHide }>
+                        <>
+                            <QbmHeader page={page} msgs={msgs} clearMsg={clearMsg} horiz={props.config.scroll === 'x'} />
+                            <QbmContainer page={page} hidden={hidden} />
+                            <QbmFooter page={page} hidden={hidden} />
+                        </>
+                    </HideContext.Provider>
+                </NotifyContext.Provider >
+            </ConfigContext.Provider>
+        </NavContext.Provider>
+    );
 }
 
 // disable context menu
@@ -68,7 +67,7 @@ window.oncontextmenu = function () {
 chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {    
     applyTheme(result.theme);
     adjustHeight(result.startup[1]);
-    render(html`<${QBM} config=${result}/>`, document.body);
+    render(<QBM config={result} />, document.body);
 });
 
 function adjustHeight(length) {

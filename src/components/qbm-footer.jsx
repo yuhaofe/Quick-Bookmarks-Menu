@@ -1,9 +1,9 @@
-import { html } from 'htm/preact';
+import { h } from 'preact';
 import { styled } from 'goober';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
 
-import { NavContext, ConfigContext } from '../qbm.js';
-import { QbmItem } from '../components/qbm-item.js';
+import { NavContext, ConfigContext } from '../qbm.jsx';
+import { QbmItem } from './qbm-item.jsx';
 
 //#region css
 const Footer = styled('div')`
@@ -66,10 +66,10 @@ export function QbmFooter(props) {
         }
     };
 
-    return html`
-        <${Footer} >
-            <${QbmItem} ...${manageProps} active=${!(props.hidden && props.hidden.includes('manage'))}/>
-            <${HiddenBtn} active=${config.showHidden} onClick=${onHiddenClick} title="${chrome.i18n.getMessage("hidden_list")}"/>
-        <//>
-    `;
+    return (
+        <Footer >
+            <QbmItem {...manageProps} active={!(props.hidden && props.hidden.includes('manage'))}/>
+            <HiddenBtn active={config.showHidden} onClick={onHiddenClick} title={chrome.i18n.getMessage("hidden_list")}/>
+        </Footer>
+    );
 }  

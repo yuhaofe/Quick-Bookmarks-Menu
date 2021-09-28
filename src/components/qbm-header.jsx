@@ -1,9 +1,9 @@
-import { html } from 'htm/preact';
+import { h } from 'preact';
 import { styled } from 'goober';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
 
-import { NavContext, ConfigContext } from '../qbm.js'
-import { QbmPathItem } from '../components/qbm-path-item.js';
+import { NavContext, ConfigContext } from '../qbm.jsx'
+import { QbmPathItem } from './qbm-path-item.jsx';
 
 //#region css
 const Header = styled('div')`
@@ -101,13 +101,13 @@ function QbmMsg(props) {
         clearTimeout(this._closeTimer);
         props.onClose();
     }, 1000);
-    return html`
-        <${MsgBanner}>
-            ${props.msg.target && 
-                html`"<${MsgTarget}>${props.msg.target}<//>"`
-            }<span> ${props.msg.action}</span>
-        <//>
-    `;
+    return (
+        <MsgBanner>
+            {props.msg.target && 
+                <MsgTarget>{props.msg.target}</MsgTarget>
+            }<span> {props.msg.action}</span>
+        </MsgBanner>
+    );
 }
 
 export function QbmHeader(props) {
@@ -192,19 +192,21 @@ export function QbmHeader(props) {
         }
     };
 
-    return html`
-        <${Header} horiz=${props.horiz}>
-            <${Path} empty=${empty} active=${props.page.type === 'folder'}>
-                ${paths.map(path=> html`
-                    <${QbmPathItem} ...${path} />
-                `)}
-            <//>
-            <${Search} type="text" onInput=${onInput} value=${props.page.key} ref=${searchInput} active=${props.page.type === 'search'}/>
-            <${Hidden} active=${props.page.type === 'hidden'}>${chrome.i18n.getMessage("hidden_list")}<//>
-            <${Button} onClick=${switchView} aria-label="toggle search"/>
-            ${props.msgs.map(msg => html`
-                <${QbmMsg} msg=${msg} onClose=${props.clearMsg} />
-            `)}
-        <//>
-    `;
+    return (
+        <Header horiz={props.horiz}>
+            <Path empty={empty} active={props.page.type === 'folder'}>
+                { paths.map(path=> 
+                    <QbmPathItem {...path} />
+                )}
+            </Path>
+            <Search type="text" onInput={onInput} value={props.page.key} ref={searchInput} active={props.page.type === 'search'}/>
+            <Hidden active={props.page.type === 'hidden'}>
+                {chrome.i18n.getMessage("hidden_list")}
+            </Hidden>
+            <Button onClick={switchView} aria-label="toggle search"/>
+            {props.msgs.map(msg => 
+                <QbmMsg msg={msg} onClose={props.clearMsg} />
+            )}
+        </Header>
+    );
 }

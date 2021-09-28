@@ -1,9 +1,9 @@
-import { html } from 'htm/preact';
+import { h } from 'preact';
 import { styled } from 'goober';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
 
-import { ConfigContext } from '../qbm.js'
-import { QbmList } from '../components/qbm-list.js';
+import { ConfigContext } from '../qbm.jsx'
+import { QbmList } from './qbm-list.jsx';
 
 //#region css
 const Container = styled('div')`
@@ -167,12 +167,12 @@ export function QbmContainer(props) {
     }, [lists]);
 
     loadBookmarks(props.page, props.hidden);
-    return html`
-        <${Container} horiz=${horiz} onScroll=${onScroll} onWheel=${onWheel} ref=${containerRef}>
-            ${lists.map(list => html`
-                <${QbmList} key=${list.type === 'search' ? 'search' : list.key} active=${list.active} 
-                    horiz=${horiz} list=${list.items} hidden=${props.hidden}/>
-            `)}
-        <//>
-    `;
+    return (
+        <Container horiz={horiz} onScroll={onScroll} onWheel={onWheel} ref={containerRef}>
+            { lists.map(list => 
+                <QbmList key={list.type === 'search' ? 'search' : list.key} active={list.active} 
+                    horiz={horiz} list={list.items} hidden={props.hidden}/>
+            )}
+        </Container>
+    );
 }
