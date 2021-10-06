@@ -2,6 +2,9 @@ const sass = require('sass');
 const esbuild = require('esbuild');
 const process = require('process');
 
+const dev = process.env.NODE_ENV === 'development';
+const prod = process.env.NODE_ENV === 'production';
+
 /**
  * @type { esbuild.Plugin }
  */
@@ -24,7 +27,7 @@ const scssPlugin = {
  * @type { esbuild.BuildOptions }
  */
 const buildOptions = {
-    entryPoints: ['src/qbm.jsx', 'src/background.js'],
+    entryPoints: { popup: 'src/Popup.jsx', background: 'src/background.js' },
     outdir: 'build',
     bundle: true,
     minify: true,
@@ -33,12 +36,22 @@ const buildOptions = {
     jsxFactory: 'h',
     jsxFragment: 'Fragment',
     logLevel: 'info',
-    plugins: [scssPlugin]
+    plugins: [scssPlugin],
+
+    // dev options
+    sourcemap: dev ? 'inline' : false,
+    watch: dev,
+
+    // prod options
+    metafile: prod
 };
 
-if (process.env.NODE_ENV === 'development') {
-    buildOptions.sourcemap = 'inline';
-    buildOptions.watch = true;
+async function build() {
+    const result = await esbuild.build(buildOptions).catch(() => process.exit(1));
+
+    if (result.metafile) {
+        console.log(await esbuild.analyzeMetafile(result.metafile));
+    }
 }
 
-esbuild.build(buildOptions).catch(() => process.exit(1));
+build();

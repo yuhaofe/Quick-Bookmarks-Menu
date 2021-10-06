@@ -2,8 +2,8 @@ import { h } from 'preact';
 import { styled } from 'goober';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
 
-import { NavContext, ConfigContext } from '../qbm.jsx'
-import { QbmPathItem } from './qbm-path-item.jsx';
+import { NavContext, ConfigContext } from '../Popup'
+import { BookmarkPath } from './BookmarkPath';
 
 //#region css
 const Header = styled('div')`
@@ -110,7 +110,7 @@ function QbmMsg(props) {
     );
 }
 
-export function QbmHeader(props) {
+export function PopupHeader(props) {
     const [paths, setPaths] = useState([]);
     const [empty, setEmpty] = useState(true);
     const [lastId, setLastId] = useState('0');
@@ -196,7 +196,7 @@ export function QbmHeader(props) {
         <Header horiz={props.horiz}>
             <Path empty={empty} active={props.page.type === 'folder'}>
                 { paths.map(path=> 
-                    <QbmPathItem {...path} />
+                    <BookmarkPath {...path} />
                 )}
             </Path>
             <Search type="text" onInput={onInput} value={props.page.key} ref={searchInput} active={props.page.type === 'search'}/>

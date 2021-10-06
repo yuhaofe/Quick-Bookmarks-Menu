@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { styled, css } from 'goober';
 import { useState, useContext } from 'preact/hooks';
-import { NavContext, ConfigContext, HideContext, NotifyContext } from '../qbm.jsx';
+import { NavContext, ConfigContext, HideContext, NotifyContext } from '../Popup';
 
 //#region css
 
@@ -122,7 +122,7 @@ const HideBtn = styled('button')`
  *  title: string,
  *  url: string | undefined}} props 
  */
-export function QbmItem(props) {
+export function BookmarkItem(props) {
     const [menuActive, setMenuActive] = useState(false);
     const navigate = useContext(NavContext);
     const notify = useContext(NotifyContext);
