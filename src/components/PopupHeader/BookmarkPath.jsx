@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { styled } from 'goober';
 import { useContext } from 'preact/hooks';
 
-import { NavContext, ConfigContext, NotifyContext } from '../Popup';
+import { NavContext, ConfigContext, NotifyContext } from '../../Popup';
 
 //#region css
 const PathItem = styled('button')`
@@ -116,7 +116,7 @@ const Text = styled('a')`
  *  title: string
  * }} props 
  */
-export function BookmarkPath(props) {
+export default function BookmarkPath(props) {
     const naviage = useContext(NavContext);
     const config = useContext(ConfigContext);
     const notify = useContext(NotifyContext);

@@ -2,8 +2,8 @@ import { h } from 'preact';
 import { styled } from 'goober';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
 
-import { NavContext, ConfigContext } from '../Popup';
-import { BookmarkItem } from './BookmarkItem';
+import { NavContext, ConfigContext } from '../../Popup';
+import BookmarkItem from '../PopupContainer/BookmarkItem';
 
 //#region css
 const Footer = styled('div')`
@@ -50,7 +50,7 @@ const manageProps = {
     url: 'chrome://bookmarks'
 };
 
-export function PopupFooter(props) {
+export default function PopupFooter(props) {
     const [lastId, setLastId] = useState('0');
     const navigate = useContext(NavContext);
     const config = useContext(ConfigContext);

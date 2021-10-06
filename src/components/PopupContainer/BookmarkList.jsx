@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { styled } from 'goober';
-import { BookmarkItem } from './BookmarkItem'
+import BookmarkItem from './BookmarkItem'
 
 //#region css
 const List = styled('div')`
@@ -15,7 +15,7 @@ const List = styled('div')`
 `;
 //#endregion
 
-export function BookmarkList(props) {
+export default function BookmarkList(props) {
 
     return (
         <List active={props.active} horiz={props.horiz}>
