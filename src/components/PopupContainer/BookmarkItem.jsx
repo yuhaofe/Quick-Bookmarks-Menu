@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useState, useContext } from 'preact/hooks';
-import { NavContext, ConfigContext, HideContext, NotifyContext } from '../../Popup';
+import { NavContext, ConfigContext, HideContext, NotifyContext } from '../ContextWrapper';
 import './BookmarkItem.scss';
 
 /**
@@ -94,7 +94,7 @@ export default function BookmarkItem(props) {
                 </span>
             </button>
             <div className={`bookmark-item-menu ${menuActive ? 'show-flex' : 'hide'}`}>
-                <button className={`bookmark-item-hide-button${!props.active ? 'bookmark-item-hide-button-slash' : ''}`} onClick={onHiddenClick} />
+                <button className={`bookmark-item-hide-button${!props.active ? ' bookmark-item-hide-button-slash' : ''}`} onClick={onHiddenClick} />
             </div>
         </div>
     );

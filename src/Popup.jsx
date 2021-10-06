@@ -1,14 +1,10 @@
-import { h, render, Fragment, createContext } from 'preact';
+import { h, render, Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import ContextWrapper from './components/ContextWrapper';
 import PopupHeader from './components/PopupHeader';
 import PopupContainer from './components/PopupContainer';
 import PopupFooter from './components/PopupFooter';
 import './Popup.scss';
-
-const NavContext = createContext('navigate');
-const ConfigContext = createContext('config');
-const NotifyContext = createContext('notify');
-const HideContext = createContext('hide');
 
 function Popup(props) {
     const [page, setPage] = useState({
@@ -31,27 +27,21 @@ function Popup(props) {
         let newHidden;
         if (hidden.includes(key)) {
             newHidden = hidden.filter(e => e != key);
-        }else{
+        } else {
             newHidden = hidden.concat([key]);
         }
-        chrome.storage.local.set({ hidden: newHidden }, ()=>{
+        chrome.storage.local.set({ hidden: newHidden }, () => {
             setHidden(newHidden);
         });
     };
     return (
-        <NavContext.Provider value={ navigate }>
-            <ConfigContext.Provider value={ props.config }>
-                <NotifyContext.Provider value={ notify }>
-                    <HideContext.Provider value={ setItemHide }>
-                        <>
-                            <PopupHeader page={page} msgs={msgs} clearMsg={clearMsg} horiz={props.config.scroll === 'x'} />
-                            <PopupContainer page={page} hidden={hidden} />
-                            <PopupFooter page={page} hidden={hidden} />
-                        </>
-                    </HideContext.Provider>
-                </NotifyContext.Provider >
-            </ConfigContext.Provider>
-        </NavContext.Provider>
+        <ContextWrapper nav={navigate} config={props.config} notify={notify} hide={setItemHide}>
+            <>
+                <PopupHeader page={page} msgs={msgs} clearMsg={clearMsg} horiz={props.config.scroll === 'x'} />
+                <PopupContainer page={page} hidden={hidden} />
+                <PopupFooter page={page} hidden={hidden} />
+            </>
+        </ContextWrapper>
     );
 }
 
@@ -61,7 +51,7 @@ window.oncontextmenu = function () {
 };
 
 // {openIn, hoverEnter, startup, root, theme, scroll}
-chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {    
+chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {
     applyTheme(result.theme);
     adjustHeight(result.startup[1]);
     render(<Popup config={result} />, document.body);
@@ -70,7 +60,7 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 's
 function adjustHeight(length) {
     const rootStyle = document.documentElement.style;
     const height = (length + 2) * 30;
-    rootStyle.setProperty('--startup-height',  (height > 600) ? '600px' : height + 'px');
+    rootStyle.setProperty('--startup-height', (height > 600) ? '600px' : height + 'px');
 }
 
 function applyTheme(theme) {
@@ -80,7 +70,7 @@ function applyTheme(theme) {
         rootElm.classList.add('theme-dark');
         rootElm.classList.remove('theme-light');
     }
-    
+
     const applyLightTheme = () => {
         rootElm.classList.add('theme-light');
         rootElm.classList.remove('theme-dark');
@@ -99,10 +89,10 @@ function applyTheme(theme) {
             const colorSchemeTest = e => {
                 if (e.matches) {
                     applyDarkTheme();
-                    chrome.runtime.sendMessage({theme: "dark"});
+                    chrome.runtime.sendMessage({ theme: "dark" });
                 } else {
                     applyLightTheme();
-                    chrome.runtime.sendMessage({theme: "light"});
+                    chrome.runtime.sendMessage({ theme: "light" });
                 }
             };
             mql.onchange = colorSchemeTest;
@@ -110,5 +100,3 @@ function applyTheme(theme) {
             break;
     }
 }
-
-export { NavContext, ConfigContext, NotifyContext, HideContext };
