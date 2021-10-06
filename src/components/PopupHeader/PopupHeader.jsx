@@ -1,112 +1,20 @@
 import { h } from 'preact';
-import { styled } from 'goober';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
-
 import { NavContext, ConfigContext } from '../../Popup'
 import BookmarkPath from './BookmarkPath';
+import './PopupHeader.scss';
 
-//#region css
-const Header = styled('div')`
-    height: 30px;
-    line-height: 30px;
-    max-width: ${props => props.horiz ? "none" : "300px"};
-    border-bottom: 1px solid var(--line-color);
-    position: relative;
-
-    display: flex;
-    flex-direction: row;
-`;
-const Path = styled('div')`
-    flex: auto;
-    display: ${props => props.active ? "flex":"none"};
-    flex-direction: row;
-    flex-wrap: nowrap;
-    height: 30px;
-    line-height: 30px;
-    min-width: 200px;
-    background-color: ${props => props.empty ? "inherit":"var(--line-color)"};
-    padding: 0px;
-    margin: 0px;
-`;
-const Search = styled('input')`
-    flex: auto;
-    display: ${props => props.active ? "flex":"none"};
-    padding-left: 10px;
-    user-select: text;
-
-    &:focus {
-        outline: none;
-        background-color: var(--hover-color);
-    }
-`;
-const Hidden = styled('div')`
-    flex: auto;
-    display: ${props => props.active ? "inline":"none"};
-    text-align: center;
-    font-weight: bold;
-`;
-const Button = styled('button')`
-    flex: none;
-
-    height: 30px;
-    width: 30px;
-    border: none;
-    border-left: 1px solid var(--line-color);
-    background-color: var(--bg-color);
-    background-image: var(--search-icon);
-    background-size: 16px 16px;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    &:hover {
-        background-color: var(--hover-color);
-    }
-
-    &:focus {
-        outline: none;
-        background-color: var(--hover-color);
-    }
-
-    &:active {
-        background-color: var(--active-color);
-    }
-`;
-const MsgBanner = styled('div')`
-    display: flex;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-
-    background-color: var(--msg-color);
-    font-weight: bold;
-    flex-direction: row;
-    justify-content: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    z-index: var(--z-index-overlay);
-`;
-const MsgTarget = styled('span')`
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-`;
-//#endregion
-
-function QbmMsg(props) {
+function PopupMessage(props) {
     this._closeTimer = setTimeout(()=>{
         clearTimeout(this._closeTimer);
         props.onClose();
     }, 1000);
     return (
-        <MsgBanner>
+        <div className="msg-banner">
             {props.msg.target && 
-                <MsgTarget>{props.msg.target}</MsgTarget>
+                <span className="msg-target">{props.msg.target}</span>
             }<span> {props.msg.action}</span>
-        </MsgBanner>
+        </div>
     );
 }
 
@@ -161,7 +69,7 @@ export default function PopupHeader(props) {
         } 
         if(props.page.type === 'search'){
             if(searchInput.current){
-                searchInput.current.base.focus();
+                searchInput.current.focus();
             }
             
         }
@@ -193,20 +101,21 @@ export default function PopupHeader(props) {
     };
 
     return (
-        <Header horiz={props.horiz}>
-            <Path empty={empty} active={props.page.type === 'folder'}>
-                { paths.map(path=> 
+        <div className={ `popup-header popup-header-${ props.horiz ? 'horiz' : 'vert' }` }>
+            <div className={ `popup-header-path${ empty ? ' popup-header-path-empty' : ''} ${ props.page.type === 'folder' ? 'show-flex' : 'hide' }` }>
+                { paths.map( path => 
                     <BookmarkPath {...path} />
                 )}
-            </Path>
-            <Search type="text" onInput={onInput} value={props.page.key} ref={searchInput} active={props.page.type === 'search'}/>
-            <Hidden active={props.page.type === 'hidden'}>
+            </div>
+            <input className={ `popup-header-search ${ props.page.type === 'search' ? 'show-flex' : 'hide' }` } 
+                type="text" onInput={onInput} value={props.page.key} ref={searchInput}/>
+            <div className={ `popup-header-hidden ${ props.page.type === 'hidden' ? 'show-inline' : 'hide' }` }>
                 {chrome.i18n.getMessage("hidden_list")}
-            </Hidden>
-            <Button onClick={switchView} aria-label="toggle search"/>
+            </div>
+            <button className="search-button" onClick={switchView} aria-label="toggle search" />
             {props.msgs.map(msg => 
-                <QbmMsg msg={msg} onClose={props.clearMsg} />
+                <PopupMessage msg={msg} onClose={props.clearMsg} />
             )}
-        </Header>
+        </div>
     );
 }
