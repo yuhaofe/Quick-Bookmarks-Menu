@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
-import { ConfigContext } from '../../Popup';
+import { ConfigContext } from '../ContextWrapper';
 import BookmarkList from './BookmarkList';
 import './PopupContainer.scss';
 

@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
-import { NavContext, ConfigContext } from '../../Popup'
+import { NavContext, ConfigContext } from '../ContextWrapper';
 import BookmarkPath from './BookmarkPath';
 import './PopupHeader.scss';
 

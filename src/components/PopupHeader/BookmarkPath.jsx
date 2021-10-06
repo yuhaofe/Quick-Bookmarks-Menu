@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useContext } from 'preact/hooks';
-import { NavContext, ConfigContext, NotifyContext } from '../../Popup';
+import { NavContext, ConfigContext, NotifyContext } from '../ContextWrapper';
 import './BookmarkPath.scss';
 
 /**
