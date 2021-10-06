@@ -1,0 +1,41 @@
+#popup-footer {
+    display: flex;
+
+    & > *:first-child {
+        flex: auto;
+    }
+}
+
+.hidden-button {
+    flex: none;
+    height: 30px;
+    width: 30px;
+    border: none;
+    border-left: 1px solid var(--line-color);
+    background-color: var(--bg-color);
+    background-image: var(--eye-icon);
+    background-size: 18px 18px;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &-show {
+        display: inline;
+    }
+
+    &-hide {
+        display: none;
+    }
+
+    &:hover {
+        background-color: var(--hover-color);
+    }
+
+    &:focus {
+        outline: none;
+        background-color: var(--hover-color);
+    }
+
+    &:active {
+        background-color: var(--active-color);
+    }
+}

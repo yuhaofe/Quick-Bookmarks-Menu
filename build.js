@@ -11,8 +11,15 @@ const prod = process.env.NODE_ENV === 'production';
 const scssPlugin = {
     name: 'scss',
     setup(build) {
+        build.onResolve({ filter: /.*/ }, args => {
+            // do not resolve css url()
+            if (args.kind === 'url-token') {
+                return { external: true };
+            }
+        });
+
         build.onLoad({ filter: /\.scss$/ }, args => {
-            const { css, stats: { includedFiles }} = sass.renderSync({ file: args.path });
+            const { css, stats: { includedFiles } } = sass.renderSync({ file: args.path });
 
             return {
                 contents: css.toString('utf-8'),
@@ -31,6 +38,7 @@ const buildOptions = {
     outdir: 'build',
     bundle: true,
     minify: true,
+    keepNames: true,
     format: 'esm',
     target: 'chrome86',
     jsxFactory: 'h',

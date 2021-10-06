@@ -1,12 +1,9 @@
 import { h, render, Fragment, createContext } from 'preact';
-import { setup } from 'goober';
 import { useState, useEffect } from 'preact/hooks';
-
 import PopupHeader from './components/PopupHeader';
 import PopupContainer from './components/PopupContainer';
 import PopupFooter from './components/PopupFooter';
-
-setup(h);
+import './Popup.scss';
 
 const NavContext = createContext('navigate');
 const ConfigContext = createContext('config');

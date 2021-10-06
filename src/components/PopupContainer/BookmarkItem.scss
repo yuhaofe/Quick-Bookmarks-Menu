@@ -1,0 +1,118 @@
+.bookmark-item {
+    flex-direction: row;
+    height: 30px;
+    line-height: 30px;
+    background-color: inherit;
+
+    &-hide {
+        background-color: var(--active-color);
+    }
+
+    &-button {
+        flex: auto;
+
+        border: none;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        height: 100%;
+        line-height: 100%;
+        padding-left: 10px;
+        background-color: inherit;
+        min-width: 0px;
+    
+        &:hover {
+            border: none;
+            background-color: var(--hover-color);
+        }
+    
+        &:focus {
+            border: none;
+            outline: none;
+            background-color: var(--hover-color);
+        } 
+    
+        &:active {
+            border: none;
+            background-color: var(--active-color);
+        }
+    }
+
+    &-icon {
+        flex: 0 0 auto;
+        height: 16px;
+        width: 16px;
+        filter: var(--icon-filter);
+    
+        background-color: inherit;
+        background-size: 16px 16px;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        &-link {
+            background-image: none;
+        }
+
+        &-folder {
+            background-image: var(--folder-icon);
+        }
+
+        &-manage {
+            background-image: var(--manage-icon);
+        }
+    }
+
+    &-text {
+        flex: 1 1 auto;
+        color: var(--text-color);
+        width: 100%;
+        margin-left: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: left !important;
+    }
+
+    &-menu {
+        flex: none;
+        flex-direction: row;
+        background-color: inherit;
+        box-sizing: border-box;
+        border: 1px inset;
+        border-right-width: 0px;
+        height: 100%;
+        line-height: 100%;
+    }
+
+    &-hide-button {
+        flex: 0 0 auto;
+
+        height: 30px;
+        width: 30px;
+        border: none;
+        border-left: 1px solid var(--line-color);
+        background-color: var(--bg-color);
+        background-image: var(--eye-icon);
+        background-size: 18px 18px;
+        background-position: center;
+        background-repeat: no-repeat;
+        
+        &-slash {
+            background-image: var(--eye-slash-icon);
+        }
+
+        &:hover {
+            background-color: var(--hover-color);
+        }
+    
+        &:focus {
+            outline: none;
+            background-color: var(--hover-color);
+        } 
+    
+        &:active {
+            background-color: var(--active-color);
+        }
+    }
+}
