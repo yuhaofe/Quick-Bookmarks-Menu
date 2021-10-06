@@ -13,7 +13,7 @@
 
     "clean": "rm -rf build/*",
     "build:static": "cp -r public/. build/",
-    "build:js": "esbuild src/qbm.jsx src/background.js --bundle --format=esm --minify --keep-names --target=chrome86 --jsx-factory=h --jsx-fragment=Fragment --outdir=build"
+    "build:js": "esbuild src/qbm.jsx src/background.js --bundle --format=esm --target=chrome86 --jsx-factory=h --jsx-fragment=Fragment --outdir=build"
   },
   "keywords": [],
   "repository": {
