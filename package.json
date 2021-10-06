@@ -4,10 +4,16 @@
   "description": "A chrome extension gives you quick access to your bookmarks.",
   "main": "src/qbm.html",
   "scripts": {
-    "dev": "snowpack build --watch",
-    "build": "snowpack build",
+    "predev": "npm run clean",
+    "dev": "npm run build:static && npm run build:js -- --sourcemap=inline --watch",
+    "prebuild": "npm run clean",
+    "build": "npm run build:static && npm run build:js -- --analyze",
     "prepack": "npm run build",
-    "pack": "zip -r build/build.zip build/"
+    "pack": "7z a build/build.zip ./build/*",
+
+    "clean": "rm -rf build/*",
+    "build:static": "cp -r public/. build/",
+    "build:js": "esbuild src/qbm.jsx src/background.js --bundle --format=esm --minify --keep-names --target=chrome86 --jsx-factory=h --jsx-fragment=Fragment --outdir=build"
   },
   "keywords": [],
   "repository": {
@@ -25,6 +31,6 @@
     "preact": "^10.5.14"
   },
   "devDependencies": {
-    "snowpack": "^3.8.8"
+    "esbuild": "^0.13.4"
   }
 }

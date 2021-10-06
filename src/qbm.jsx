@@ -110,11 +110,11 @@ function applyDarkTheme(style) {
     style.setProperty('--active-color', '#6d6d6d');
     style.setProperty('--line-color', '#878787');
     style.setProperty('--msg-color', '#006375');
-    style.setProperty('--folder-icon', 'url("../icons/folder-dark.webp")');
-    style.setProperty('--search-icon', 'url("../icons/search-dark.webp")');
-    style.setProperty('--manage-icon', 'url("../icons/manage-dark.webp")');
-    style.setProperty('--eye-icon', 'url("../icons/eye-dark.webp")');
-    style.setProperty('--eye-slash-icon', 'url("../icons/eye-slash-dark.webp")');
+    style.setProperty('--folder-icon', 'url("/icons/folder-dark.webp")');
+    style.setProperty('--search-icon', 'url("/icons/search-dark.webp")');
+    style.setProperty('--manage-icon', 'url("/icons/manage-dark.webp")');
+    style.setProperty('--eye-icon', 'url("/icons/eye-dark.webp")');
+    style.setProperty('--eye-slash-icon', 'url("/icons/eye-slash-dark.webp")');
     style.setProperty('--icon-filter', 'contrast(0.8)');
 }
 
@@ -125,11 +125,11 @@ function applyLightTheme(style) {
     style.setProperty('--active-color', '#e5e5e5');
     style.setProperty('--line-color', '#dbdbdb');
     style.setProperty('--msg-color', '#daf0ff');
-    style.setProperty('--folder-icon', 'url("../icons/folder.webp")');
-    style.setProperty('--search-icon', 'url("../icons/search.webp")');
-    style.setProperty('--manage-icon', 'url("../icons/manage.webp")');
-    style.setProperty('--eye-icon', 'url("../icons/eye.webp")');
-    style.setProperty('--eye-slash-icon', 'url("../icons/eye-slash.webp")');
+    style.setProperty('--folder-icon', 'url("/icons/folder.webp")');
+    style.setProperty('--search-icon', 'url("/icons/search.webp")');
+    style.setProperty('--manage-icon', 'url("/icons/manage.webp")');
+    style.setProperty('--eye-icon', 'url("/icons/eye.webp")');
+    style.setProperty('--eye-slash-icon', 'url("/icons/eye-slash.webp")');
     style.setProperty('--icon-filter', 'contrast(1)');
 }
 

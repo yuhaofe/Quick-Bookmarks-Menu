@@ -3,16 +3,16 @@ function colorThemeChanged(theme){
         case 'light':
             chrome.browserAction.setIcon({
                 path: {
-                    "16": "../icons/qbm16.png",
-                    "32": "../icons/qbm32.png"
+                    "16": "/icons/qbm16.png",
+                    "32": "/icons/qbm32.png"
                 }
             });
             break;
         case 'dark':
             chrome.browserAction.setIcon({
                 path: {
-                    "16": "../icons/qbm16-dark.png",
-                    "32": "../icons/qbm32-dark.png"
+                    "16": "/icons/qbm16-dark.png",
+                    "32": "/icons/qbm32-dark.png"
                 }
             });
             break;
