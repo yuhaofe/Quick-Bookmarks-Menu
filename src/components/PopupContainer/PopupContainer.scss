@@ -1,0 +1,33 @@
+.popup-container {
+    flex: 1 1 auto;
+    
+    position: relative;
+    max-width: 800px;
+    min-width: 300px;
+
+    &-horiz {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    &-vert {
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 300px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+        background: var(--active-color);
+    }
+
+    &::-webkit-scrollbar {
+        display: none;
+        width: 6px;
+        height: 6px;
+    }
+
+    &[scroll]::-webkit-scrollbar {
+        display: initial!important;
+    }
+}

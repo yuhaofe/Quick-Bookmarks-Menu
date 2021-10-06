@@ -5,15 +5,13 @@
   "main": "src/qbm.html",
   "scripts": {
     "predev": "npm run clean",
-    "dev": "npm run build:static && npm run build:js -- --sourcemap=inline --watch",
+    "dev": "npm run build:static && NODE_ENV=development node build.js",
     "prebuild": "npm run clean",
-    "build": "npm run build:static && npm run build:js -- --analyze",
+    "build": "npm run build:static && NODE_ENV=production node build.js",
     "prepack": "npm run build",
     "pack": "7z a build/build.zip ./build/*",
-
     "clean": "rm -rf build/*",
-    "build:static": "cp -r public/. build/",
-    "build:js": "esbuild src/qbm.jsx src/background.js --bundle --format=esm --target=chrome86 --jsx-factory=h --jsx-fragment=Fragment --outdir=build"
+    "build:static": "cp -r public/. build/"
   },
   "keywords": [],
   "repository": {
@@ -27,10 +25,10 @@
   },
   "homepage": "https://github.com/flyhaozi/Quick-Bookmarks-Menu#readme",
   "dependencies": {
-    "goober": "^2.0.41",
     "preact": "^10.5.14"
   },
   "devDependencies": {
-    "esbuild": "^0.13.4"
+    "esbuild": "^0.13.4",
+    "sass": "^1.42.1"
   }
 }

@@ -1,36 +1,8 @@
 import { h } from 'preact';
-import { styled } from 'goober';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
-
-import { ConfigContext } from '../qbm.jsx'
-import { QbmList } from './qbm-list.jsx';
-
-//#region css
-const Container = styled('div')`
-    flex: 1 1 auto;
-    
-    position: relative;
-    overflow-y: ${props => props.horiz ? "hidden" : "auto"};
-    overflow-x: ${props => props.horiz ? "auto" : "hidden"};
-    max-width: 800px;
-    min-width: 300px;
-    width: ${props => props.horiz ? ((Math.trunc((props.count - 1) / 18) + 1) * 200 + "px") : "300px"};
-    &::-webkit-scrollbar-thumb {
-        border-radius: 3px;
-        background: var(--active-color);
-    }
-
-    &::-webkit-scrollbar {
-        display: none;
-        width: 6px;
-        height: 6px;
-    }
-
-    &[scroll]::-webkit-scrollbar {
-        display: initial!important;
-    }
-`;
-//#endregion
+import { ConfigContext } from '../../Popup';
+import BookmarkList from './BookmarkList';
+import './PopupContainer.scss';
 
 const useBookmarks = (initialPage, initialHidden, callback) => {
     const [lists, setLists] = useState([]);
@@ -54,14 +26,14 @@ const useBookmarks = (initialPage, initialHidden, callback) => {
         }
         const hiddenItems = [];
         const searchHidden = (parent) => {
-            if (parent.children !== null && typeof parent.children == "object"){
+            if (parent.children !== null && typeof parent.children == "object") {
                 parent.children.forEach(item => {
-                    if (hidden.includes(item.id)){
+                    if (hidden.includes(item.id)) {
                         hiddenItems.push(item);
                     }
                     searchHidden(item);
                 });
-            }else{
+            } else {
                 return;
             }
         };
@@ -74,15 +46,15 @@ const useBookmarks = (initialPage, initialHidden, callback) => {
         });
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         switch (page.type) {
             case 'folder':
                 const existList = lists.find(list => list.key === page.key);
-                if (existList){
+                if (existList) {
                     hideLists();
                     existList.active = true;
                     setLists([...lists]);
-                }else{
+                } else {
                     chrome.bookmarks.getChildren(page.key, results => {
                         const newList = {
                             type: 'folder',
@@ -125,60 +97,61 @@ const useBookmarks = (initialPage, initialHidden, callback) => {
         callback();
     }, [page]);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (page.type != 'hidden') return;
         loadHiddenList();
     }, [hidden]);
 
-    return [lists, (page, hidden)=>{
+    return [lists, (page, hidden) => {
         setPage(page);
         setHidden(hidden);
     }];
 };
 
-export function QbmContainer(props) {
+export default function PopupContainer(props) {
     const containerRef = useRef(null);
-    const [lists, loadBookmarks] = useBookmarks(props.page, props.hidden,()=>{
-        containerRef.current && (containerRef.current.base.scrollTo(0, 0));
+    const [lists, loadBookmarks] = useBookmarks(props.page, props.hidden, () => {
+        containerRef.current && (containerRef.current.scrollTo(0, 0));
     });
     const config = useContext(ConfigContext);
     const horiz = config.scroll === 'x';
+    const calcWidth = () => {
+        const activeList = lists.find(list => list.active);
+        const count = activeList ? activeList.items.length : 0;
+        return (Math.trunc((count - 1) / 18) + 1) * 200;
+    };
 
     const onWheel = e => {
-        if(horiz){
+        if (horiz) {
             e.preventDefault();
-            containerRef.current && (containerRef.current.base.scrollLeft += e.deltaY);
+            containerRef.current && (containerRef.current.scrollLeft += e.deltaY);
         }
     };
 
     const onScroll = () => {
-        containerRef.current && containerRef.current.base.setAttribute('scroll', '');
+        containerRef.current && containerRef.current.setAttribute('scroll', '');
         if (this._hideScroll) {
             clearTimeout(this._hideScroll);
         }
         this._hideScroll = setTimeout(() => {
-            containerRef.current && containerRef.current.base.removeAttribute('scroll');
+            containerRef.current && containerRef.current.removeAttribute('scroll');
         }, 400);
     };
 
     useEffect(() => {
-        if (lists.length === 1){
+        if (lists.length === 1) {
             document.body.classList.remove('startup');
         }
     }, [lists]);
 
     loadBookmarks(props.page, props.hidden);
     return (
-        <Container horiz={horiz} count={ 
-            (() => {
-                const activeList = lists.find(list => list.active);
-                return activeList ? activeList.items.length : 0;
-            })()
-        } onScroll={onScroll} onWheel={onWheel} ref={containerRef}>
-            { lists.map(list => 
-                <QbmList key={list.type === 'search' ? 'search' : list.key} active={list.active} 
-                    horiz={horiz} list={list.items} hidden={props.hidden}/>
+        <div className={`popup-container popup-container-${horiz ? 'horiz' : 'vert'}`} style={horiz ? { width: calcWidth() + 'px' } : {}}
+            onScroll={onScroll} onWheel={onWheel} ref={containerRef}>
+            {lists.map(list =>
+                <BookmarkList key={list.type === 'search' ? 'search' : list.key} active={list.active}
+                    horiz={horiz} list={list.items} hidden={props.hidden} />
             )}
-        </Container>
+        </div>
     );
 }
