@@ -2,8 +2,8 @@ import { h } from 'preact';
 import { styled } from 'goober';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
 
-import { ConfigContext } from '../Popup';
-import { BookmarkList } from './BookmarkList';
+import { ConfigContext } from '../../Popup';
+import BookmarkList from './BookmarkList';
 
 //#region css
 const Container = styled('div')`
@@ -136,7 +136,7 @@ const useBookmarks = (initialPage, initialHidden, callback) => {
     }];
 };
 
-export function PopupContainer(props) {
+export default function PopupContainer(props) {
     const containerRef = useRef(null);
     const [lists, loadBookmarks] = useBookmarks(props.page, props.hidden,()=>{
         containerRef.current && (containerRef.current.base.scrollTo(0, 0));

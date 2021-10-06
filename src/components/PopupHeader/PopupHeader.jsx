@@ -2,8 +2,8 @@ import { h } from 'preact';
 import { styled } from 'goober';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
 
-import { NavContext, ConfigContext } from '../Popup'
-import { BookmarkPath } from './BookmarkPath';
+import { NavContext, ConfigContext } from '../../Popup'
+import BookmarkPath from './BookmarkPath';
 
 //#region css
 const Header = styled('div')`
@@ -110,7 +110,7 @@ function QbmMsg(props) {
     );
 }
 
-export function PopupHeader(props) {
+export default function PopupHeader(props) {
     const [paths, setPaths] = useState([]);
     const [empty, setEmpty] = useState(true);
     const [lastId, setLastId] = useState('0');
