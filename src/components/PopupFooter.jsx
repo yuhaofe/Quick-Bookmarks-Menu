@@ -2,8 +2,8 @@ import { h } from 'preact';
 import { styled } from 'goober';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
 
-import { NavContext, ConfigContext } from '../qbm.jsx';
-import { QbmItem } from './qbm-item.jsx';
+import { NavContext, ConfigContext } from '../Popup';
+import { BookmarkItem } from './BookmarkItem';
 
 //#region css
 const Footer = styled('div')`
@@ -50,7 +50,7 @@ const manageProps = {
     url: 'chrome://bookmarks'
 };
 
-export function QbmFooter(props) {
+export function PopupFooter(props) {
     const [lastId, setLastId] = useState('0');
     const navigate = useContext(NavContext);
     const config = useContext(ConfigContext);
@@ -68,7 +68,7 @@ export function QbmFooter(props) {
 
     return (
         <Footer >
-            <QbmItem {...manageProps} active={!(props.hidden && props.hidden.includes('manage'))}/>
+            <BookmarkItem {...manageProps} active={!(props.hidden && props.hidden.includes('manage'))}/>
             <HiddenBtn active={config.showHidden} onClick={onHiddenClick} title={chrome.i18n.getMessage("hidden_list")}/>
         </Footer>
     );

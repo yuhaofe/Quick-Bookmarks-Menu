@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { styled } from 'goober';
-import { QbmItem } from './qbm-item.jsx'
+import { BookmarkItem } from './BookmarkItem'
 
 //#region css
 const List = styled('div')`
@@ -15,12 +15,12 @@ const List = styled('div')`
 `;
 //#endregion
 
-export function QbmList(props) {
+export function BookmarkList(props) {
 
     return (
         <List active={props.active} horiz={props.horiz}>
             {props.list.map(item => 
-                <QbmItem key={item.id} id={item.id} type={item.url ? "link" : "folder"} 
+                <BookmarkItem key={item.id} id={item.id} type={item.url ? "link" : "folder"} 
                     title={item.title} url={item.url} active={!props.hidden.includes(item.id)} />
             )}
         </List>

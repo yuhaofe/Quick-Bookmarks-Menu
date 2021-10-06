@@ -2,9 +2,9 @@ import { h, render, Fragment, createContext } from 'preact';
 import { setup } from 'goober';
 import { useState, useEffect } from 'preact/hooks';
 
-import { QbmHeader } from './components/qbm-header.jsx';
-import { QbmContainer } from './components/qbm-container.jsx';
-import { QbmFooter } from './components/qbm-footer.jsx';
+import { PopupHeader } from './components/PopupHeader';
+import { PopupContainer } from './components/PopupContainer';
+import { PopupFooter } from './components/PopupFooter';
 
 setup(h);
 
@@ -13,7 +13,7 @@ const ConfigContext = createContext('config');
 const NotifyContext = createContext('notify');
 const HideContext = createContext('hide');
 
-function QBM(props) {
+function Popup(props) {
     const [page, setPage] = useState({
         type: 'folder',
         key: props.config.startup[0]
@@ -47,9 +47,9 @@ function QBM(props) {
                 <NotifyContext.Provider value={ notify }>
                     <HideContext.Provider value={ setItemHide }>
                         <>
-                            <QbmHeader page={page} msgs={msgs} clearMsg={clearMsg} horiz={props.config.scroll === 'x'} />
-                            <QbmContainer page={page} hidden={hidden} />
-                            <QbmFooter page={page} hidden={hidden} />
+                            <PopupHeader page={page} msgs={msgs} clearMsg={clearMsg} horiz={props.config.scroll === 'x'} />
+                            <PopupContainer page={page} hidden={hidden} />
+                            <PopupFooter page={page} hidden={hidden} />
                         </>
                     </HideContext.Provider>
                 </NotifyContext.Provider >
@@ -67,7 +67,7 @@ window.oncontextmenu = function () {
 chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {    
     applyTheme(result.theme);
     adjustHeight(result.startup[1]);
-    render(<QBM config={result} />, document.body);
+    render(<Popup config={result} />, document.body);
 });
 
 function adjustHeight(length) {
