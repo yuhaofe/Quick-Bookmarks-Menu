@@ -1,0 +1,19 @@
+.bookmark-list {
+    grid-template-rows: repeat(auto-fit, 30px);
+    grid-auto-rows: 30px;
+    min-width: 300px;
+
+    &-horiz {
+        grid-auto-flow: column;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))!important;
+        grid-auto-columns: minmax(200px, 1fr)!important;
+        max-height: 540px;
+    }
+
+    &-vert {
+        grid-auto-flow: row;
+        grid-template-columns: 300px;
+        grid-auto-columns: 300px;
+        max-height: none;
+    }
+}
