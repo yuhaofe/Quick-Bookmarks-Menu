@@ -28,7 +28,7 @@ export default function PopupFooter(props) {
     };
 
     return (
-        <div id="popup-footer">
+        <div className="popup-footer">
             <BookmarkItem { ...manageProps } active={ !(props.hidden && props.hidden.includes('manage')) } />
             <button className={ `hidden-button hidden-button-${ config.showHidden ? 'show' : 'hide' }` } 
                 onClick={ onHiddenClick } title={ chrome.i18n.getMessage('hidden_list') } />

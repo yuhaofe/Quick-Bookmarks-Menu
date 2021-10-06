@@ -21,21 +21,41 @@
 
 // global
 :root {
-    --text-color: #000000;
-    --bg-color: #ffffff;
-    --hover-color: #efefef;
-    --active-color: #e5e5e5;
-    --line-color: #dbdbdb;
-    --msg-color: #daf0ff;
-    --folder-icon: url("/icons/folder.webp");
-    --search-icon: url("/icons/search.webp");
-    --manage-icon: url("/icons/manage.webp");
-    --eye-icon: url("/icons/eye.webp");
-    --eye-slash-icon: url("/icons/eye-slash.webp");
-    --icon-filter: contrast(1);
     --startup-height: 600px;
     --z-index-modal: 1000;
     --z-index-overlay: 900;
+
+    &.theme {
+        &-light {
+            --text-color: #000000;
+            --bg-color: #ffffff;
+            --hover-color: #efefef;
+            --active-color: #e5e5e5;
+            --line-color: #dbdbdb;
+            --msg-color: #daf0ff;
+            --folder-icon: url("/icons/folder.webp");
+            --search-icon: url("/icons/search.webp");
+            --manage-icon: url("/icons/manage.webp");
+            --eye-icon: url("/icons/eye.webp");
+            --eye-slash-icon: url("/icons/eye-slash.webp");
+            --icon-filter: contrast(1);
+        }
+
+        &-dark {
+            --text-color: #eeeeee;
+            --bg-color: #3a3a3a;
+            --hover-color: #545454;
+            --active-color: #6d6d6d;
+            --line-color: #878787;
+            --msg-color: #006375;
+            --folder-icon: url("/icons/folder-dark.webp");
+            --search-icon: url("/icons/search-dark.webp");
+            --manage-icon: url("/icons/manage-dark.webp");
+            --eye-icon: url("/icons/eye-dark.webp");
+            --eye-slash-icon: url("/icons/eye-slash-dark.webp");
+            --icon-filter: contrast(0.8);
+        }
+    }
 }
 
 html {
