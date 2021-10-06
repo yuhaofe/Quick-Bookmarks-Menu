@@ -74,23 +74,34 @@ function adjustHeight(length) {
 }
 
 function applyTheme(theme) {
-    const rootStyle = document.documentElement.style;
+    const rootElm = document.documentElement;
+
+    const applyDarkTheme = () => {
+        rootElm.classList.add('theme-dark');
+        rootElm.classList.remove('theme-light');
+    }
+    
+    const applyLightTheme = () => {
+        rootElm.classList.add('theme-light');
+        rootElm.classList.remove('theme-dark');
+    }
+
     switch (theme) {
         case 'light':
-            applyLightTheme(rootStyle);
+            applyLightTheme();
             break;
         case 'dark':
-            applyDarkTheme(rootStyle);
+            applyDarkTheme();
             break;
         case 'auto':
         default:
             const mql = window.matchMedia('(prefers-color-scheme: dark)');
             const colorSchemeTest = e => {
                 if (e.matches) {
-                    applyDarkTheme(rootStyle);
+                    applyDarkTheme();
                     chrome.runtime.sendMessage({theme: "dark"});
                 } else {
-                    applyLightTheme(rootStyle);
+                    applyLightTheme();
                     chrome.runtime.sendMessage({theme: "light"});
                 }
             };
@@ -98,36 +109,6 @@ function applyTheme(theme) {
             colorSchemeTest(mql);
             break;
     }
-}
-
-function applyDarkTheme(style) {
-    style.setProperty('--text-color', '#eeeeee');
-    style.setProperty('--bg-color', '#3a3a3a');
-    style.setProperty('--hover-color', '#545454');
-    style.setProperty('--active-color', '#6d6d6d');
-    style.setProperty('--line-color', '#878787');
-    style.setProperty('--msg-color', '#006375');
-    style.setProperty('--folder-icon', 'url("/icons/folder-dark.webp")');
-    style.setProperty('--search-icon', 'url("/icons/search-dark.webp")');
-    style.setProperty('--manage-icon', 'url("/icons/manage-dark.webp")');
-    style.setProperty('--eye-icon', 'url("/icons/eye-dark.webp")');
-    style.setProperty('--eye-slash-icon', 'url("/icons/eye-slash-dark.webp")');
-    style.setProperty('--icon-filter', 'contrast(0.8)');
-}
-
-function applyLightTheme(style) {
-    style.setProperty('--text-color', '#000000');
-    style.setProperty('--bg-color', '#ffffff');
-    style.setProperty('--hover-color', '#efefef');
-    style.setProperty('--active-color', '#e5e5e5');
-    style.setProperty('--line-color', '#dbdbdb');
-    style.setProperty('--msg-color', '#daf0ff');
-    style.setProperty('--folder-icon', 'url("/icons/folder.webp")');
-    style.setProperty('--search-icon', 'url("/icons/search.webp")');
-    style.setProperty('--manage-icon', 'url("/icons/manage.webp")');
-    style.setProperty('--eye-icon', 'url("/icons/eye.webp")');
-    style.setProperty('--eye-slash-icon', 'url("/icons/eye-slash.webp")');
-    style.setProperty('--icon-filter', 'contrast(1)');
 }
 
 export { NavContext, ConfigContext, NotifyContext, HideContext };
