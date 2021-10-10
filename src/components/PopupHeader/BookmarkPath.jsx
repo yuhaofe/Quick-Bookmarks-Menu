@@ -12,7 +12,7 @@ import './BookmarkPath.scss';
  */
 export default function BookmarkPath(props) {
     const naviage = useContext(NavContext);
-    const config = useContext(ConfigContext);
+    const [config, setConfig] = useContext(ConfigContext);
     const notify = useContext(NotifyContext);
 
     const hoverEnterSpeed = {

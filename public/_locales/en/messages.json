@@ -20,6 +20,9 @@
     "set_startup_done": {
         "message": "has been set as startup folder"
     },
+    "options": {
+        "message": "Options"
+    },
     "open_in": {
         "message": "Open bookmarks in"
     },

@@ -24,12 +24,7 @@ export default function PopupHeader(props) {
     const [lastId, setLastId] = useState('0');
     const searchInput = useRef(null);
     const navigate = useContext(NavContext);
-    const config = useContext(ConfigContext);
-    const rootId = {
-        root: '0',
-        bar: '1',
-        other: '2'
-    };
+    const [config, setConfig] = useContext(ConfigContext);
     const insertItem = (id, newPaths) => {
         const path = {
             id: id,
@@ -40,7 +35,7 @@ export default function PopupHeader(props) {
             path.title = results[0].title;
             if (id === '0') path.title = chrome.i18n.getMessage("home");
             newPaths.unshift(path);//insert before first
-            if (id === rootId[config.root]) {
+            if (id === config.root) {
                 newPaths[newPaths.length - 1].last = true;
                 setPaths(newPaths);
                 if (empty) setEmpty(false);
@@ -111,6 +106,9 @@ export default function PopupHeader(props) {
                 type="text" onInput={onInput} value={props.page.key} ref={searchInput}/>
             <div className={ `popup-header-hidden ${ props.page.type === 'hidden' ? 'show-inline' : 'hide' }` }>
                 {chrome.i18n.getMessage("hidden_list")}
+            </div>
+            <div className={ `popup-header-hidden ${ props.page.type === 'options' ? 'show-inline' : 'hide' }` }>
+                {chrome.i18n.getMessage("options")}
             </div>
             <button className="search-button" onClick={switchView} aria-label="toggle search" />
             {props.msgs.map(msg => 
