@@ -28,6 +28,7 @@
     "preact": "^10.5.14"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.159",
     "esbuild": "^0.13.4",
     "sass": "^1.42.1"
   }

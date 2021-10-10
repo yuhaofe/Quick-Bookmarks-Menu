@@ -14,9 +14,10 @@ const manageProps = {
 export default function PopupFooter(props) {
     const [lastId, setLastId] = useState('0');
     const navigate = useContext(NavContext);
-    const config = useContext(ConfigContext);
+    const [config, setConfig] = useContext(ConfigContext);
 
-    const onHiddenClick = () => {
+    const onHiddenClick = e => {
+        e.currentTarget.blur();
         if (props.page.type != 'hidden'){
             if(props.page.type === 'folder'){
                 setLastId(props.page.key);
@@ -27,11 +28,28 @@ export default function PopupFooter(props) {
         }
     };
 
+    const onOptionsClick = e => {
+        e.currentTarget.blur();
+        if (props.page.type != 'options'){
+            if(props.page.type === 'folder'){
+                setLastId(props.page.key);
+            }
+            navigate('options', '');
+        }else{
+            chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {
+                setConfig(result);
+                navigate('folder', result.startup[0]);
+            });
+        }
+    };
+
     return (
         <div className="popup-footer">
             <BookmarkItem { ...manageProps } active={ !(props.hidden && props.hidden.includes('manage')) } />
             <button className={ `hidden-button hidden-button-${ config.showHidden ? 'show' : 'hide' }` } 
                 onClick={ onHiddenClick } title={ chrome.i18n.getMessage('hidden_list') } />
+            <button className={ `options-button options-button-show` } 
+                onClick={ onOptionsClick } title={ chrome.i18n.getMessage('options') } />
         </div>
     );
 }  
