@@ -1,0 +1,30 @@
+.options-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 14px;
+    margin: 10px;
+
+    span {
+        flex: 1 0 100%;
+        display: inline-block;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    input[type=radio], input[type=checkbox] {
+        border: 0px;
+        width: 12px;
+        height: 12px;
+    }
+
+    input[type=radio]:checked+label {
+        font-weight: 600;
+    }
+
+    &-option {
+        display: inline-block;
+        margin-right: 5px;
+    }
+}

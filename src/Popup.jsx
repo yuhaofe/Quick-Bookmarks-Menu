@@ -7,12 +7,15 @@ import PopupFooter from './components/PopupFooter';
 import './Popup.scss';
 
 function Popup(props) {
+    const [config, setConfig] = useState(props.config);
     const [page, setPage] = useState({
         type: 'folder',
-        key: props.config.startup[0]
+        key: config.startup[0]
     });
     const [msgs, setMsgs] = useState([]);
-    const [hidden, setHidden] = useState(props.config.hidden);
+    const [hidden, setHidden] = useState(config.hidden);
+
+    applyTheme(config.theme);
 
     const navigate = (type, key) => {
         setPage({ type, key });
@@ -35,9 +38,9 @@ function Popup(props) {
         });
     };
     return (
-        <ContextWrapper nav={navigate} config={props.config} notify={notify} hide={setItemHide}>
+        <ContextWrapper nav={navigate} config={[config, setConfig]} notify={notify} hide={setItemHide}>
             <>
-                <PopupHeader page={page} msgs={msgs} clearMsg={clearMsg} horiz={props.config.scroll === 'x'} />
+                <PopupHeader page={page} msgs={msgs} clearMsg={clearMsg} horiz={config.scroll === 'x'} />
                 <PopupContainer page={page} hidden={hidden} />
                 <PopupFooter page={page} hidden={hidden} />
             </>
@@ -50,9 +53,8 @@ window.oncontextmenu = function () {
     return false;
 };
 
-// {openIn, hoverEnter, startup, root, theme, scroll}
+// load config and render popup
 chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {
-    applyTheme(result.theme);
     adjustHeight(result.startup[1]);
     render(<Popup config={result} />, document.body);
 });
@@ -69,11 +71,23 @@ function applyTheme(theme) {
     const applyDarkTheme = () => {
         rootElm.classList.add('theme-dark');
         rootElm.classList.remove('theme-light');
+        chrome.browserAction.setIcon({
+            path: {
+                "16": "/icons/qbm16-dark.png",
+                "32": "/icons/qbm32-dark.png"
+            }
+        });
     }
 
     const applyLightTheme = () => {
         rootElm.classList.add('theme-light');
         rootElm.classList.remove('theme-dark');
+        chrome.browserAction.setIcon({
+            path: {
+                "16": "/icons/qbm16.png",
+                "32": "/icons/qbm32.png"
+            }
+        });
     }
 
     switch (theme) {
@@ -89,10 +103,8 @@ function applyTheme(theme) {
             const colorSchemeTest = e => {
                 if (e.matches) {
                     applyDarkTheme();
-                    chrome.runtime.sendMessage({ theme: "dark" });
                 } else {
                     applyLightTheme();
-                    chrome.runtime.sendMessage({ theme: "light" });
                 }
             };
             mql.onchange = colorSchemeTest;

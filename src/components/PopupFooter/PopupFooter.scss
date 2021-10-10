@@ -6,25 +6,16 @@
     }
 }
 
-.hidden-button {
+%button-shared {
     flex: none;
     height: 30px;
     width: 30px;
     border: none;
     border-left: 1px solid var(--line-color);
     background-color: var(--bg-color);
-    background-image: var(--eye-icon);
     background-size: 18px 18px;
     background-position: center;
     background-repeat: no-repeat;
-
-    &-show {
-        display: inline;
-    }
-
-    &-hide {
-        display: none;
-    }
 
     &:hover {
         background-color: var(--hover-color);
@@ -37,5 +28,31 @@
 
     &:active {
         background-color: var(--active-color);
+    }
+}
+
+.hidden-button {
+    @extend %button-shared;
+    background-image: var(--eye-icon);
+
+    &-show {
+        display: inline;
+    }
+
+    &-hide {
+        display: none;
+    }
+}
+
+.options-button {
+    @extend %button-shared;
+    background-image: var(--options-icon);
+
+    &-show {
+        display: inline;
+    }
+
+    &-hide {
+        display: none;
     }
 }
