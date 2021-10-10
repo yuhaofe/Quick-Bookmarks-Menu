@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
 import { ConfigContext } from '../ContextWrapper';
 import BookmarkList from './BookmarkList';
+import OptionsPage from './OptionsPage';
 import './PopupContainer.scss';
 
 const useBookmarks = (initialPage, initialHidden, callback) => {
@@ -113,12 +114,16 @@ export default function PopupContainer(props) {
     const [lists, loadBookmarks] = useBookmarks(props.page, props.hidden, () => {
         containerRef.current && (containerRef.current.scrollTo(0, 0));
     });
-    const config = useContext(ConfigContext);
+    const [config, setConfig] = useContext(ConfigContext);
     const horiz = config.scroll === 'x';
     const calcWidth = () => {
-        const activeList = lists.find(list => list.active);
-        const count = activeList ? activeList.items.length : 0;
-        return (Math.trunc((count - 1) / 18) + 1) * 200;
+        if (props.page.type === 'options') {
+            return 300;
+        } else {
+            const activeList = lists.find(list => list.active);
+            const count = activeList ? activeList.items.length : 0;
+            return (Math.trunc((count - 1) / 18) + 1) * 200;
+        }
     };
 
     const onWheel = e => {
@@ -148,10 +153,13 @@ export default function PopupContainer(props) {
     return (
         <div className={`popup-container popup-container-${horiz ? 'horiz' : 'vert'}`} style={horiz ? { width: calcWidth() + 'px' } : {}}
             onScroll={onScroll} onWheel={onWheel} ref={containerRef}>
-            {lists.map(list =>
-                <BookmarkList key={list.type === 'search' ? 'search' : list.key} active={list.active}
-                    horiz={horiz} list={list.items} hidden={props.hidden} />
-            )}
+            { props.page.type === 'options'
+              ? <OptionsPage></OptionsPage>
+              : lists.map(list =>
+                    <BookmarkList key={list.type === 'search' ? 'search' : list.key} active={list.active}
+                        horiz={horiz} list={list.items} hidden={props.hidden} />
+                )
+            }
         </div>
     );
 }

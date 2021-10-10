@@ -20,6 +20,9 @@
     "set_startup_done": {
         "message": "已被设为起始目录"
     },
+    "options": {
+        "message": "选项"
+    },
     "open_in": {
         "message": "打开书签于"
     },

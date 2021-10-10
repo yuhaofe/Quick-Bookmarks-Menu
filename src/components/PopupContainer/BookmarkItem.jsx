@@ -14,7 +14,7 @@ export default function BookmarkItem(props) {
     const [menuActive, setMenuActive] = useState(false);
     const navigate = useContext(NavContext);
     const notify = useContext(NotifyContext);
-    const config = useContext(ConfigContext);
+    const [config, setConfig] = useContext(ConfigContext);
     const setItemHide = useContext(HideContext);
     const hoverEnterSpeed = {
         slow: 750,
