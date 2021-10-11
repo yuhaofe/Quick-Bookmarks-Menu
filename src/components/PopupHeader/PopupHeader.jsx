@@ -13,7 +13,7 @@ function PopupMessage(props) {
         <div className="msg-banner">
             {props.msg.target && 
                 <span className="msg-target">{props.msg.target}</span>
-            }<span> {props.msg.action}</span>
+            }<span>{props.msg.action}</span>
         </div>
     );
 }
