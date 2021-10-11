@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useState, useContext } from 'preact/hooks';
-import { NavContext, ConfigContext, HideContext, NotifyContext } from '../ContextWrapper';
+import { NavContext, ConfigContext } from '../ContextWrapper';
 import './BookmarkItem.scss';
 
 /**
@@ -11,11 +11,9 @@ import './BookmarkItem.scss';
  *  url: string | undefined}} props 
  */
 export default function BookmarkItem(props) {
-    const [menuActive, setMenuActive] = useState(false);
     const navigate = useContext(NavContext);
-    const notify = useContext(NotifyContext);
     const [config, setConfig] = useContext(ConfigContext);
-    const setItemHide = useContext(HideContext);
+
     const hoverEnterSpeed = {
         slow: 750,
         medium: 450,
@@ -65,37 +63,17 @@ export default function BookmarkItem(props) {
         }
     };
 
-    const onContextMenu = () => {
-        if (this._clickTimeout) {
-            clearTimeout(this._clickTimeout);
-        }
-        setMenuActive(!menuActive);
-    };
-
-    const onHiddenClick = () => {
-        setItemHide(props.type != 'manage' ? props.id : 'manage');
-        notify({
-            target: props.title,
-            action: props.active ?
-                chrome.i18n.getMessage("set_hidden") :
-                chrome.i18n.getMessage("set_hidden_off")
-        });
-    };
-
     return (
-        <div className={`bookmark-item${!props.active ? ' bookmark-item-hide' : ''} ${props.active || config.showHidden ? 'show-flex' : 'hide'}`} onMouseLeave={() => setMenuActive(false)}>
+        <div className={`bookmark-item${!props.active ? ' bookmark-item-hide' : ''} ${props.active || config.showHidden ? 'show-flex' : 'hide'}`}
+            data-id={props.id}>
             <button className="bookmark-item-button" role="link" tabIndex="0" title={props.type === 'link' ? props.title + "\n" + props.url : ""}
-                type={props.type} onClick={onClick} onMouseOver={onMouseOver} onMouseOut={onMouseOut} onWheel={onMouseOut}
-                onContextMenu={onContextMenu}>
+                type={props.type} onClick={onClick} onMouseOver={onMouseOver} onMouseOut={onMouseOut} onWheel={onMouseOut}>
                 <img className={`bookmark-item-icon bookmark-item-icon-${props.type}`} src={props.type === 'link' ? "chrome://favicon/" + props.url
                     : "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />
                 <span className="bookmark-item-text">
                     {props.title}
                 </span>
             </button>
-            <div className={`bookmark-item-menu ${menuActive ? 'show-flex' : 'hide'}`}>
-                <button className={`bookmark-item-hide-button${!props.active ? ' bookmark-item-hide-button-slash' : ''}`} onClick={onHiddenClick} />
-            </div>
         </div>
     );
 }
