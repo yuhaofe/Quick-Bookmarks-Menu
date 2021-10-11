@@ -41,12 +41,16 @@ export default function BookmarkItem(props: BookmarkItemProps) {
                 active = true;
             case 'background':
                 chrome.tabs.create({ url: props.url, active });
-                window.close();
+                if (config.doNotClose != 'background' && config.doNotClose != 'both'){
+                    window.close();
+                }
                 break;
             case 'current':
             default:
                 chrome.tabs.update({ url: props.url });
-                window.close();
+                if (config.doNotClose != 'current' && config.doNotClose != 'both'){
+                    window.close();
+                }
                 break;
         }
     };

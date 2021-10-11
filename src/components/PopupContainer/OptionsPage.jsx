@@ -62,6 +62,29 @@ const optionsItems = [
         ]
     },
     {
+        name: 'do_not_close',
+        storage: 'doNotClose',
+        type: 'radio',
+        options: [
+            {
+                name: 'do_not_close_none',
+                value: 'none'
+            },
+            {
+                name: 'do_not_close_current',
+                value: 'current',
+            },
+            {
+                name: 'do_not_close_background',
+                value: 'background',
+            },
+            {
+                name: 'do_not_close_both',
+                value: 'both',
+            }
+        ]
+    },
+    {
         name: 'hover_enter',
         storage: 'hoverEnter',
         type: 'radio',
