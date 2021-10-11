@@ -11,7 +11,12 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 's
     };
 
     if (!startup) {
-        chrome.storage.local.set({ startup } = qbm);
+        chrome.bookmarks.get('1', results => {  //check for mobile browser
+            if (!Array.isArray(results) || !results.length) {
+                qbm.startup = ['0', 18];
+            }
+            chrome.storage.local.set({ startup } = qbm);
+        });
     } else if (!startup[1]) {   //check for old format
         chrome.storage.local.set({ startup: [startup, 18]});
     } else {
