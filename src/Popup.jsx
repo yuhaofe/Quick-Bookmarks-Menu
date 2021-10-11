@@ -4,6 +4,7 @@ import ContextWrapper from './components/ContextWrapper';
 import PopupHeader from './components/PopupHeader';
 import PopupContainer from './components/PopupContainer';
 import PopupFooter from './components/PopupFooter';
+import ContextMenu from './components/ContextMenu';
 import './Popup.scss';
 
 function Popup(props) {
@@ -43,15 +44,11 @@ function Popup(props) {
                 <PopupHeader page={page} msgs={msgs} clearMsg={clearMsg} horiz={config.scroll === 'x'} />
                 <PopupContainer page={page} hidden={hidden} />
                 <PopupFooter page={page} hidden={hidden} />
+                <ContextMenu />
             </>
         </ContextWrapper>
     );
 }
-
-// disable context menu
-window.oncontextmenu = function () {
-    return false;
-};
 
 // load config and render popup
 chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {

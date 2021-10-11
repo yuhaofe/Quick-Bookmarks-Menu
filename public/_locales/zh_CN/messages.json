@@ -85,5 +85,20 @@
     },
     "set_hidden_off": {
         "message": "已取消隐藏"
+    },
+    "menu_open_in_new": {
+        "message": "在新标签中打开"
+    },
+    "menu_open_in_current": {
+        "message": "在当前页中打开"
+    },
+    "menu_open_in_background": {
+        "message": "在后台打开"
+    },
+    "menu_hide": {
+        "message": "隐藏书签"
+    },
+    "menu_show": {
+        "message": "显示书签"
     }
 }
