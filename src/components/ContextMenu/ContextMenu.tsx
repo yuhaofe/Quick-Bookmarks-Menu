@@ -1,6 +1,6 @@
 import { createRef, h, Fragment } from 'preact';
 import { useEffect, useState, useContext } from 'preact/hooks';
-import { HideContext, NotifyContext } from '../ContextWrapper';
+import { HideContext, NotifyContext, ConfigContext } from '../ContextWrapper';
 import './ContextMenu.scss';
 
 interface ContextMenuProps {
@@ -19,6 +19,8 @@ type Position = [x: number, y: number];
 export default function ContextMenu(props: ContextMenuProps) {
     const notify = useContext(NotifyContext);
     const setItemHide = useContext(HideContext);
+    const [config, setConfig] = useContext(ConfigContext);
+
     const [bookmark, setBookmark] = useState<Bookmark>({ id: '0', title: '', active: true });
     const [pos, setPos] = useState<Position>([0, 0]);
     const [show, setShow] = useState(false);
@@ -106,12 +108,16 @@ export default function ContextMenu(props: ContextMenuProps) {
                 active = true;
             case 'background':
                 chrome.tabs.create({ url: bookmark.url, active });
-                window.close();
+                if (config.doNotClose != 'background' && config.doNotClose != 'both'){
+                    window.close();
+                }
                 break;
             case 'current':
             default:
                 chrome.tabs.update({ url: bookmark.url });
-                window.close();
+                if (config.doNotClose != 'current' && config.doNotClose != 'both'){
+                    window.close();
+                }
                 break;
         }
     };

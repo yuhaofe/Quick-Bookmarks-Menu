@@ -24,10 +24,10 @@
         "message": "选项"
     },
     "open_in": {
-        "message": "打开书签于"
+        "message": "在 ··· 打开书签"
     },
     "open_in_middle": {
-        "message": "中键 - 打开书签于"
+        "message": "中键 - 在 ··· 打开书签"
     },
     "open_in_new": {
         "message": "新标签"
@@ -37,6 +37,21 @@
     },
     "open_in_background": {
         "message": "后台"
+    },
+    "do_not_close": {
+        "message": "在 ··· 打开时保持显示"
+    },
+    "do_not_close_none": {
+        "message": "从不"
+    },
+    "do_not_close_current": {
+        "message": "当前页"
+    },
+    "do_not_close_background": {
+        "message": "后台"
+    },
+    "do_not_close_both": {
+        "message": "两者都有"
     },
     "hover_enter": {
         "message": "目录悬停进入"
