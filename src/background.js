@@ -1,7 +1,8 @@
-chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], ({ openIn, hoverEnter, startup, root, theme, scroll, hidden, showHidden}) => {
+chrome.storage.local.get(['openIn', 'openInMiddle', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], ({ openIn, openInMiddle, hoverEnter, startup, root, theme, scroll, hidden, showHidden}) => {
     const qbm = {
         startup: ['1', 18],
         openIn: 'new',
+        openInMiddle: 'background',
         hoverEnter: 'medium',
         root: '0',
         theme: 'auto',
@@ -27,6 +28,12 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 's
         chrome.storage.local.set({ openIn } = qbm);
     } else {
         qbm.openIn = openIn;
+    }
+
+    if (!openInMiddle) {
+        chrome.storage.local.set({ openInMiddle } = qbm);
+    } else {
+        qbm.openInMiddle = openInMiddle;
     }
 
     if (!hoverEnter) {

@@ -26,6 +26,9 @@
     "open_in": {
         "message": "打开书签于"
     },
+    "open_in_middle": {
+        "message": "中键 - 打开书签于"
+    },
     "open_in_new": {
         "message": "新标签"
     },

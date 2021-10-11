@@ -43,6 +43,25 @@ const optionsItems = [
         ]
     },
     {
+        name: 'open_in_middle',
+        storage: 'openInMiddle',
+        type: 'radio',
+        options: [
+            {
+                name: 'open_in_new',
+                value: 'new'
+            },
+            {
+                name: 'open_in_current',
+                value: 'current',
+            },
+            {
+                name: 'open_in_background',
+                value: 'background',
+            }
+        ]
+    },
+    {
         name: 'hover_enter',
         storage: 'hoverEnter',
         type: 'radio',
