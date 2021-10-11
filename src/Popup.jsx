@@ -51,7 +51,7 @@ function Popup(props) {
 }
 
 // load config and render popup
-chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {
+chrome.storage.local.get(['openIn', 'openInMiddle', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {
     adjustHeight(result.startup[1]);
     render(<Popup config={result} />, document.body);
 });
