@@ -85,5 +85,20 @@
     },
     "set_hidden_off": {
         "message": "has been visible."
+    },
+    "menu_open_in_new": {
+        "message": "Open in new tab"
+    },
+    "menu_open_in_current": {
+        "message": "Open in current tab"
+    },
+    "menu_open_in_background": {
+        "message": "Open in background"
+    },
+    "menu_hide": {
+        "message": "Hide bookmark"
+    },
+    "menu_show": {
+        "message": "Show bookmark"
     }
 }
