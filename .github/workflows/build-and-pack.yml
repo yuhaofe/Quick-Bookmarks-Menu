@@ -1,5 +1,5 @@
 name: build-and-pack
-on: pull_request
+on: [push, pull_request]
 jobs:
   build-and-pack:
     runs-on: ubuntu-latest
