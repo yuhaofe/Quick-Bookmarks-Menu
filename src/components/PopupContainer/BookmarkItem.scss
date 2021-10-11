@@ -73,46 +73,4 @@
         text-overflow: ellipsis;
         text-align: left !important;
     }
-
-    &-menu {
-        flex: none;
-        flex-direction: row;
-        background-color: inherit;
-        box-sizing: border-box;
-        border: 1px inset;
-        border-right-width: 0px;
-        height: 100%;
-        line-height: 100%;
-    }
-
-    &-hide-button {
-        flex: 0 0 auto;
-
-        height: 30px;
-        width: 30px;
-        border: none;
-        border-left: 1px solid var(--line-color);
-        background-color: var(--bg-color);
-        background-image: var(--eye-icon);
-        background-size: 18px 18px;
-        background-position: center;
-        background-repeat: no-repeat;
-        
-        &-slash {
-            background-image: var(--eye-slash-icon);
-        }
-
-        &:hover {
-            background-color: var(--hover-color);
-        }
-    
-        &:focus {
-            outline: none;
-            background-color: var(--hover-color);
-        } 
-    
-        &:active {
-            background-color: var(--active-color);
-        }
-    }
 }

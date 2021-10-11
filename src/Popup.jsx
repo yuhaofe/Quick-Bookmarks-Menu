@@ -50,11 +50,6 @@ function Popup(props) {
     );
 }
 
-// disable context menu
-window.oncontextmenu = function () {
-    return false;
-};
-
 // load config and render popup
 chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {
     adjustHeight(result.startup[1]);
