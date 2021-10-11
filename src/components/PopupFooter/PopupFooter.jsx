@@ -36,7 +36,7 @@ export default function PopupFooter(props) {
             }
             navigate('options', '');
         }else{
-            chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {
+            chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], result => {
                 setConfig(result);
                 navigate('folder', result.startup[0]);
             });

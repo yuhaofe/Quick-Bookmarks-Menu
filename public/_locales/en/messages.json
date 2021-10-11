@@ -38,6 +38,21 @@
     "open_in_background": {
         "message": "Background"
     },
+    "do_not_close": {
+        "message": "Keep showing when opening in"
+    },
+    "do_not_close_none": {
+        "message": "None"
+    },
+    "do_not_close_current": {
+        "message": "Current tab"
+    },
+    "do_not_close_background": {
+        "message": "Background"
+    },
+    "do_not_close_both": {
+        "message": "Both"
+    },
     "hover_enter": {
         "message": "Open folders by hovering"
     },
