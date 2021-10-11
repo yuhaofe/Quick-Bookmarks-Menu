@@ -12,7 +12,7 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 's
 
     if (!startup) {
         chrome.storage.local.set({ startup } = qbm);
-    } else if (!startup[1]) {
+    } else if (!startup[1]) {   //check for old format
         chrome.storage.local.set({ startup: [startup, 18]});
     } else {
         qbm.startup = startup;
@@ -30,7 +30,7 @@ chrome.storage.local.get(['openIn', 'hoverEnter', 'startup', 'root', 'theme', 's
         qbm.hoverEnter = hoverEnter;
     }
 
-    if (!root) {
+    if (!root || isNaN(root)) { //check for old format
         chrome.storage.local.set({ root } = qbm);
     } else {
         qbm.root = root;

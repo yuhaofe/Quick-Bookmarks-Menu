@@ -25,6 +25,10 @@ export default function PopupHeader(props) {
     const searchInput = useRef(null);
     const navigate = useContext(NavContext);
     const [config, setConfig] = useContext(ConfigContext);
+    if(isNaN(config.root)) {
+        config.root = '0';
+    }
+
     const insertItem = (id, newPaths) => {
         const path = {
             id: id,
