@@ -26,6 +26,9 @@
     "open_in": {
         "message": "Open bookmarks in"
     },
+    "open_in_middle": {
+        "message": "Middle button - Open bookmarks in"
+    },
     "open_in_new": {
         "message": "New tab"
     },
