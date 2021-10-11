@@ -1,8 +1,7 @@
 {
   "name": "quick-bookmarks-menu",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "A chrome extension gives you quick access to your bookmarks.",
-  "main": "src/qbm.html",
   "scripts": {
     "predev": "npm run clean",
     "dev": "npm run build:static && NODE_ENV=development node build.js",
@@ -13,17 +12,17 @@
     "clean": "rm -rf build/*",
     "build:static": "cp -r public/. build/"
   },
-  "keywords": [],
+  "keywords": ["chrome-extension", "bookmarks"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/flyhaozi/Quick-Bookmarks-Menu.git"
   },
-  "author": "",
+  "author": "fHz",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/flyhaozi/Quick-Bookmarks-Menu/issues"
   },
-  "homepage": "https://github.com/flyhaozi/Quick-Bookmarks-Menu#readme",
+  "homepage": "https://flyhaozi.com/quick-bookmarks-menu",
   "dependencies": {
     "preact": "^10.5.14"
   },
