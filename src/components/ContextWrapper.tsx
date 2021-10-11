@@ -5,6 +5,7 @@ interface Configuration {
     startup: [string, number];
     openIn: 'new' | 'current' | 'background';
     openInMiddle: 'new' | 'current' | 'background';
+    doNotClose: 'none' | 'current' | 'background' | 'both';
     hoverEnter: 'off' | 'slow' | 'medium' | 'fast';
     root: string;
     theme: 'auto' | 'light' | 'dark';

@@ -3,7 +3,12 @@
     align-items: center;
     flex-wrap: wrap;
     font-size: 14px;
-    margin: 10px;
+    padding: 10px;
+    border-bottom: 1px dashed var(--line-color);
+
+    &:last-child {
+        border-bottom: none;
+    }
 
     span {
         flex: 1 0 100%;
