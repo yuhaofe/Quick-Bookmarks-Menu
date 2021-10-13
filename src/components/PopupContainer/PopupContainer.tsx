@@ -1,12 +1,19 @@
 import { h } from 'preact';
 import { useState, useEffect, useContext, useRef } from 'preact/hooks';
-import { ConfigContext } from '../ContextWrapper';
-import BookmarkList from './BookmarkList';
+import { ConfigContext, Page } from '../ContextWrapper';
+import BookmarkListComponent from './BookmarkList';
 import OptionsPage from './OptionsPage';
 import './PopupContainer.scss';
 
-const useBookmarks = (initialPage, initialHidden, callback) => {
-    const [lists, setLists] = useState([]);
+interface BookmarkList {
+    type: 'folder' | 'hidden' | 'search';
+    key: string;
+    items: any[];
+    active: boolean;
+}
+
+const useBookmarks = (initialPage: Page, initialHidden: string[], callback: Function): [BookmarkList[], Function] => {
+    const [lists, setLists] = useState<BookmarkList[]>([]);
     const [page, setPage] = useState(initialPage);
     const [hidden, setHidden] = useState(initialHidden);
 
@@ -22,13 +29,13 @@ const useBookmarks = (initialPage, initialHidden, callback) => {
                 key: '',
                 items: [],
                 active: false
-            }
+            };
             lists.push(hiddenList);
         }
-        const hiddenItems = [];
-        const searchHidden = (parent) => {
+        const hiddenItems: any[] = [];
+        const searchHidden = (parent: any) => {
             if (parent.children !== null && typeof parent.children == "object") {
-                parent.children.forEach(item => {
+                parent.children.forEach((item: any) => {
                     if (hidden.includes(item.id)) {
                         hiddenItems.push(item);
                     }
@@ -40,9 +47,11 @@ const useBookmarks = (initialPage, initialHidden, callback) => {
         };
         chrome.bookmarks.getTree(root => {
             searchHidden(root[0]);
-            hiddenList.items = hiddenItems;
-            hideLists();
-            hiddenList.active = true;
+            if (hiddenList) {
+                hiddenList.items = hiddenItems;
+                hideLists();
+                hiddenList.active = true;
+            }
             setLists([...lists]);
         });
     };
@@ -57,7 +66,7 @@ const useBookmarks = (initialPage, initialHidden, callback) => {
                     setLists([...lists]);
                 } else {
                     chrome.bookmarks.getChildren(page.key, results => {
-                        const newList = {
+                        const newList: BookmarkList = {
                             type: 'folder',
                             key: page.key,
                             active: true,
@@ -81,9 +90,11 @@ const useBookmarks = (initialPage, initialHidden, callback) => {
                     lists.push(searchList);
                 }
                 chrome.bookmarks.search(page.key, results => {
-                    searchList.items = results;
-                    hideLists();
-                    searchList.active = true;
+                    if (searchList) {
+                        searchList.items = results;
+                        hideLists();
+                        searchList.active = true;
+                    }
                     setLists([...lists]);
                 });
                 break;
@@ -103,14 +114,19 @@ const useBookmarks = (initialPage, initialHidden, callback) => {
         loadHiddenList();
     }, [hidden]);
 
-    return [lists, (page, hidden) => {
+    return [lists, (page: Page, hidden: string[]) => {
         setPage(page);
         setHidden(hidden);
     }];
 };
 
-export default function PopupContainer(props) {
-    const containerRef = useRef(null);
+interface PopupContainerProps {
+    page: Page;
+    hidden: string[];
+}
+
+export default function PopupContainer(props: PopupContainerProps) {
+    const containerRef = useRef<HTMLDivElement>(null);
     const [lists, loadBookmarks] = useBookmarks(props.page, props.hidden, () => {
         containerRef.current && (containerRef.current.scrollTo(0, 0));
     });
@@ -126,19 +142,20 @@ export default function PopupContainer(props) {
         }
     };
 
-    const onWheel = e => {
+    const onWheel = (e: WheelEvent) => {
         if (horiz) {
             e.preventDefault();
             containerRef.current && (containerRef.current.scrollLeft += e.deltaY);
         }
     };
 
+    let hideScroll: number | null = null;
     const onScroll = () => {
         containerRef.current && containerRef.current.setAttribute('scroll', '');
-        if (this._hideScroll) {
-            clearTimeout(this._hideScroll);
+        if (hideScroll) {
+            clearTimeout(hideScroll);
         }
-        this._hideScroll = setTimeout(() => {
+        hideScroll = setTimeout(() => {
             containerRef.current && containerRef.current.removeAttribute('scroll');
         }, 400);
     };
@@ -153,10 +170,10 @@ export default function PopupContainer(props) {
     return (
         <div className={`popup-container popup-container-${horiz ? 'horiz' : 'vert'}`} style={horiz ? { width: calcWidth() + 'px' } : {}}
             onScroll={onScroll} onWheel={onWheel} ref={containerRef}>
-            { props.page.type === 'options'
-              ? <OptionsPage></OptionsPage>
-              : lists.map(list =>
-                    <BookmarkList key={list.type === 'search' ? 'search' : list.key} active={list.active}
+            {props.page.type === 'options'
+                ? <OptionsPage></OptionsPage>
+                : lists.map(list =>
+                    <BookmarkListComponent key={list.type === 'search' ? 'search' : list.key} active={list.active}
                         horiz={horiz} list={list.items} hidden={props.hidden} />
                 )
             }
