@@ -1,7 +1,12 @@
 import { h, createContext, ComponentChildren } from 'preact';
 import { StateUpdater } from 'preact/hooks';
 
-interface Configuration {
+export interface Page {
+    type: 'folder' | 'search' | 'hidden' | 'options';
+    key: string;
+}
+
+export interface Configuration {
     startup: [string, number];
     openIn: 'new' | 'current' | 'background';
     openInMiddle: 'new' | 'current' | 'background';
@@ -13,18 +18,24 @@ interface Configuration {
     hidden: Array<string>;
     showHidden: boolean;
 };
+
+export interface Message {
+    target: string;
+    action: string;
+}
+
 interface ContextWrapperProps {
-    nav: (type: string, key: string) => {};
+    nav: (type: Page["type"], key: Page["key"]) => void;
     config: [Configuration, StateUpdater<Configuration>];
-    notify: (msg: object) => {};
-    hide: (key: string) => {};
+    notify: (msg: Message) => void;
+    hide: (key: string) => void;
     children: ComponentChildren;
 };
 
-const NavContext = createContext((_type: string, _key: string) => { });
-const ConfigContext = createContext<[Configuration, StateUpdater<Configuration>]>([{} as Configuration, () => {}]);
-const NotifyContext = createContext((_msg: object) => { });
-const HideContext = createContext((_key: string) => { });
+const NavContext = createContext<ContextWrapperProps["nav"]>(() => { });
+const ConfigContext = createContext<ContextWrapperProps["config"]>([{} as Configuration, () => { }]);
+const NotifyContext = createContext<ContextWrapperProps["notify"]>(() => { });
+const HideContext = createContext<ContextWrapperProps["hide"]>(() => { });
 
 export default function ContextWrapper({ nav, config, notify, hide, children }: ContextWrapperProps) {
     return (

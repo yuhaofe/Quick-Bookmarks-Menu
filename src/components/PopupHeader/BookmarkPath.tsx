@@ -3,14 +3,13 @@ import { useContext } from 'preact/hooks';
 import { NavContext, ConfigContext, NotifyContext } from '../ContextWrapper';
 import './BookmarkPath.scss';
 
-/**
- * 
- * @param {{
- *  id: string
- *  title: string
- * }} props 
- */
-export default function BookmarkPath(props) {
+export interface BookmarkPathProps {
+    id: string;
+    title: string;
+    last?: boolean;
+}
+
+export default function BookmarkPath(props: BookmarkPathProps) {
     const naviage = useContext(NavContext);
     const [config, setConfig] = useContext(ConfigContext);
     const notify = useContext(NotifyContext);
@@ -25,14 +24,15 @@ export default function BookmarkPath(props) {
         naviage('folder', props.id);
     };
 
+    let clickTimeout: number | null = null;
     const onMouseOver = () => {
         if (config.hoverEnter === 'off' || props.last) return;
-        this._clickTimeout = setTimeout(() => openFolder(), hoverEnterSpeed[config.hoverEnter]);
+        clickTimeout = setTimeout(() => openFolder(), hoverEnterSpeed[config.hoverEnter]);
     };
 
     const onMouseOut = () => {
-        if (this._clickTimeout) {
-            clearTimeout(this._clickTimeout);
+        if (clickTimeout) {
+            clearTimeout(clickTimeout);
         }
     };
 
@@ -40,17 +40,17 @@ export default function BookmarkPath(props) {
         if (props.last) {
             chrome.bookmarks.getChildren(props.id, results => {
                 chrome.storage.local.set({ startup: [props.id, results.length] });
-                notify({target: props.title, action: chrome.i18n.getMessage("set_startup_done")});
+                notify({ target: props.title, action: chrome.i18n.getMessage("set_startup_done") });
             });
-        }else{
+        } else {
             openFolder();
         }
     };
 
     return (
-        <button className="bookmark-path" role="link" tabIndex="0" onClick={ onClick } onMouseOver={ onMouseOver }
-            onMouseOut={ onMouseOut } title={ props.last ? chrome.i18n.getMessage("set_startup") : "" }>
-            <a className="bookmark-path-text">{ props.title }</a>
+        <button className="bookmark-path" role="link" tabIndex={0} onClick={onClick} onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut} title={props.last ? chrome.i18n.getMessage("set_startup") : ""}>
+            <a className="bookmark-path-text">{props.title}</a>
         </button>
     );
 }

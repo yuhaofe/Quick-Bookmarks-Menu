@@ -1,4 +1,4 @@
-chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], ({ openIn, openInMiddle, doNotClose, hoverEnter, startup, root, theme, scroll, hidden, showHidden}) => {
+chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], ({ openIn, openInMiddle, doNotClose, hoverEnter, startup, root, theme, scroll, hidden, showHidden }) => {
     const qbm = {
         startup: ['1', 18],
         openIn: 'new',
@@ -20,7 +20,7 @@ chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 
             chrome.storage.local.set({ startup } = qbm);
         });
     } else if (!startup[1]) {   //check for old format
-        chrome.storage.local.set({ startup: [startup, 18]});
+        chrome.storage.local.set({ startup: [startup, 18] });
     } else {
         qbm.startup = startup;
     }
@@ -79,3 +79,5 @@ chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 
         qbm.showHidden = showHidden;
     }
 });
+
+export { };
