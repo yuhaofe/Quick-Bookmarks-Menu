@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import { useState, useContext } from 'preact/hooks';
+import { useContext } from 'preact/hooks';
 import { NavContext, ConfigContext } from '../ContextWrapper';
 import './BookmarkItem.scss';
 
-interface BookmarkItemProps {
+export interface BookmarkItemProps {
     id: string;
     type: string;
     title: string;
@@ -13,7 +13,7 @@ interface BookmarkItemProps {
 
 export default function BookmarkItem(props: BookmarkItemProps) {
     const navigate = useContext(NavContext);
-    const [config, setConfig] = useContext(ConfigContext);
+    const [config] = useContext(ConfigContext);
 
     const hoverEnterSpeed = {
         slow: 750,
@@ -22,7 +22,7 @@ export default function BookmarkItem(props: BookmarkItemProps) {
     };
 
     const openFolder = () => navigate('folder', props.id);
-    const openUrl = (button : 'left' | 'middle') => {
+    const openUrl = (button: 'left' | 'middle') => {
         let openIn = 'new';
         switch (button) {
             case 'middle':
@@ -34,21 +34,21 @@ export default function BookmarkItem(props: BookmarkItemProps) {
             default:
                 break;
         }
-         
+
         let active = false;
         switch (openIn) {
             case 'new':
                 active = true;
             case 'background':
                 chrome.tabs.create({ url: props.url, active });
-                if (config.doNotClose != 'background' && config.doNotClose != 'both'){
+                if (config.doNotClose != 'background' && config.doNotClose != 'both') {
                     window.close();
                 }
                 break;
             case 'current':
             default:
                 chrome.tabs.update({ url: props.url });
-                if (config.doNotClose != 'current' && config.doNotClose != 'both'){
+                if (config.doNotClose != 'current' && config.doNotClose != 'both') {
                     window.close();
                 }
                 break;
@@ -68,7 +68,7 @@ export default function BookmarkItem(props: BookmarkItemProps) {
         }
     };
 
-    let clickTimeout : number | null = null;
+    let clickTimeout: number | null = null;
     const handleMouseOver = () => {
         if (config.hoverEnter === 'off' || props.type != 'folder') return;
         clickTimeout = setTimeout(() => openFolder(), hoverEnterSpeed[config.hoverEnter]);
@@ -80,14 +80,14 @@ export default function BookmarkItem(props: BookmarkItemProps) {
         }
     };
 
-    const handleMouseUp = (e: MouseEvent) => {  
+    const handleMouseUp = (e: MouseEvent) => {
         if (e.button != 1) {    // check if it is middle button
             return;
         }
         e.preventDefault();
         openUrl('middle');
     };
-    
+
     const handleMouseDown = (e: MouseEvent) => {
         if (e.button === 1) {
             e.preventDefault();
@@ -98,7 +98,7 @@ export default function BookmarkItem(props: BookmarkItemProps) {
         <div className={`bookmark-item${!props.active ? ' bookmark-item-hide' : ''} ${props.active || config.showHidden ? 'show-flex' : 'hide'}`}
             data-id={props.id}>
             <button className="bookmark-item-button" role="link" tabIndex={0} title={props.type === 'link' ? props.title + "\n" + props.url : ""}
-                type={props.type} onClick={handleClick} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} onWheel={handleMouseOut} 
+                type={props.type} onClick={handleClick} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} onWheel={handleMouseOut}
                 onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
                 <img className={`bookmark-item-icon bookmark-item-icon-${props.type}`} src={props.type === 'link' ? "chrome://favicon/" + props.url
                     : "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />

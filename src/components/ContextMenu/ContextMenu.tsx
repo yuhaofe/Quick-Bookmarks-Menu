@@ -1,11 +1,9 @@
-import { createRef, h, Fragment } from 'preact';
-import { useEffect, useState, useContext } from 'preact/hooks';
+import { h, Fragment } from 'preact';
+import { useEffect, useState, useContext, useRef } from 'preact/hooks';
 import { HideContext, NotifyContext, ConfigContext } from '../ContextWrapper';
 import './ContextMenu.scss';
 
-interface ContextMenuProps {
-    a: string;
-};
+interface ContextMenuProps { };
 
 interface Bookmark {
     id: string;
@@ -16,15 +14,15 @@ interface Bookmark {
 
 type Position = [x: number, y: number];
 
-export default function ContextMenu(props: ContextMenuProps) {
+export default function ContextMenu({ }: ContextMenuProps) {
     const notify = useContext(NotifyContext);
     const setItemHide = useContext(HideContext);
-    const [config, setConfig] = useContext(ConfigContext);
+    const [config] = useContext(ConfigContext);
 
     const [bookmark, setBookmark] = useState<Bookmark>({ id: '0', title: '', active: true });
     const [pos, setPos] = useState<Position>([0, 0]);
     const [show, setShow] = useState(false);
-    const menuRef = createRef<HTMLUListElement>();
+    const menuRef = useRef<HTMLUListElement>(null);
 
     const handleContextMenu = (e: MouseEvent) => {
         e.preventDefault();
@@ -49,13 +47,13 @@ export default function ContextMenu(props: ContextMenuProps) {
                 return;
             }
             let { id, title, url } = results[0];
-            setBookmark({ id, title, url, active});
+            setBookmark({ id, title, url, active });
         })
 
         // make sure menu is not out of viewport
         let menu: any = menuRef.current;
         if (!menu || !menu.clientWidth || !menu.clientHeight) {
-            menu = {  clientWidth: 140, clientHeight: 120 };
+            menu = { clientWidth: 140, clientHeight: 120 };
         }
         const deltaX = window.innerWidth - menu.clientWidth - point[0];
         const deltaY = window.innerHeight - menu.clientHeight - point[1];
@@ -108,14 +106,14 @@ export default function ContextMenu(props: ContextMenuProps) {
                 active = true;
             case 'background':
                 chrome.tabs.create({ url: bookmark.url, active });
-                if (config.doNotClose != 'background' && config.doNotClose != 'both'){
+                if (config.doNotClose != 'background' && config.doNotClose != 'both') {
                     window.close();
                 }
                 break;
             case 'current':
             default:
                 chrome.tabs.update({ url: bookmark.url });
-                if (config.doNotClose != 'current' && config.doNotClose != 'both'){
+                if (config.doNotClose != 'current' && config.doNotClose != 'both') {
                     window.close();
                 }
                 break;
@@ -126,7 +124,7 @@ export default function ContextMenu(props: ContextMenuProps) {
         <ul className={`context-menu ${show ? 'show' : 'hide'}`} style={{ top: pos[1], left: pos[0] }} ref={menuRef}>
             {
                 // if url is undefined, the bookmark is a folder
-                bookmark.url && 
+                bookmark.url &&
                 <>
                     <li onClick={() => handleOpenURL('new')}>{chrome.i18n.getMessage('menu_open_in_new')}</li>
                     <li onClick={() => handleOpenURL('current')}>{chrome.i18n.getMessage('menu_open_in_current')}</li>

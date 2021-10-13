@@ -1,28 +1,9 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import OptionsItem from './OptionsItem';
+import OptionsItemComponent, { OptionsItem } from './OptionsItem';
 import "./OptionsPage.scss";
 
-/**
- * An option of a options item
- * @typedef {Object} Option
- * @property {string} name - This option's i18n name
- * @property {string} value - This option's storage value
- */
-
-/**
- * An options item of this extension
- * @typedef {Object} OptionsItem
- * @property {string} name - This item's i18n name
- * @property {string} storage - This item's storage key
- * @property {'radio'|'checkbox'} type - This item's type
- * @property {Option[]} options - This item's options
- */
-
-/**
- * @type {OptionsItem[]}
- */
-const optionsItems = [
+const optionsItems: OptionsItem[] = [
     {
         name: 'open_in',
         storage: 'openIn',
@@ -105,13 +86,13 @@ const optionsItems = [
                 name: 'hover_enter_fast',
                 value: 'fast',
             }
-        ]       
+        ]
     },
     {
         name: 'root_folder',
         storage: 'root',
         type: 'radio',
-        options: [{ value: '0' }]       
+        options: [{ name: '', value: '0' }]
     },
     {
         name: 'color_theme',
@@ -130,7 +111,7 @@ const optionsItems = [
                 name: 'dark',
                 value: 'dark',
             }
-        ]       
+        ]
     },
     {
         name: 'scroll_layout',
@@ -145,13 +126,13 @@ const optionsItems = [
                 name: 'scroll_layout_x',
                 value: 'x',
             }
-        ]       
+        ]
     },
     {
         name: 'show_hidden',
         storage: 'showHidden',
         type: 'checkbox',
-        options: [{ value: false }]   
+        options: [{ name: '', value: false }]
     }
 ];
 
@@ -165,7 +146,7 @@ export default function OptionsPage() {
                 items[index].options = [];
                 items[index].options.push({ name: chrome.i18n.getMessage("home"), value: root[0].id });
                 chrome.bookmarks.getChildren('0', results => {
-                    items[index].options.push(...results.map(result => ({ name: result.title, value: result.id }))) ;
+                    items[index].options.push(...results.map(result => ({ name: result.title, value: result.id })));
                     setItems([...items]);
                 });
             });
@@ -174,9 +155,9 @@ export default function OptionsPage() {
 
     return (
         <div className="options-page">
-        {
-            items.map(item => <OptionsItem {...item}></OptionsItem>)
-        }
+            {
+                items.map(item => <OptionsItemComponent {...item}></OptionsItemComponent>)
+            }
         </div>
     );
 }
