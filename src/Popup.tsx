@@ -70,10 +70,10 @@ function applyTheme(theme: 'auto' | 'light' | 'dark') {
     const applyDarkTheme = () => {
         rootElm.classList.add('theme-dark');
         rootElm.classList.remove('theme-light');
-        chrome.browserAction.setIcon({
+        chrome.action.setIcon({
             path: {
-                "16": "/icons/qbm16-dark.png",
-                "32": "/icons/qbm32-dark.png"
+                "16": "/icons/logo-dark-16@1x.png",
+                "32": "/icons/logo-dark-32@1x.png"
             }
         });
     }
@@ -81,10 +81,10 @@ function applyTheme(theme: 'auto' | 'light' | 'dark') {
     const applyLightTheme = () => {
         rootElm.classList.add('theme-light');
         rootElm.classList.remove('theme-dark');
-        chrome.browserAction.setIcon({
+        chrome.action.setIcon({
             path: {
-                "16": "/icons/qbm16.png",
-                "32": "/icons/qbm32.png"
+                "16": "/icons/logo-16@1x.png",
+                "32": "/icons/logo-32@1x.png"
             }
         });
     }
