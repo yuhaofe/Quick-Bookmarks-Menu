@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useContext } from 'preact/hooks';
 import { NavContext, ConfigContext } from '../ContextWrapper';
+import { faviconURL } from '../../utils/url';
 import './BookmarkItem.scss';
 
 export interface BookmarkItemProps {
@@ -100,7 +101,7 @@ export default function BookmarkItem(props: BookmarkItemProps) {
             <button className="bookmark-item-button" role="link" tabIndex={0} title={props.type === 'link' ? props.title + "\n" + props.url : ""}
                 onClick={handleClick} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} onWheel={handleMouseOut}
                 onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
-                <img className={`bookmark-item-icon bookmark-item-icon-${props.type}`} src={props.type === 'link' ? "chrome://favicon/" + props.url
+                <img className={`bookmark-item-icon bookmark-item-icon-${props.type}`} src={props.type === 'link' && props.url ? faviconURL(props.url)
                     : "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />
                 <span className="bookmark-item-text">
                     {props.title}
