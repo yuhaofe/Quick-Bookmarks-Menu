@@ -21,7 +21,7 @@ const useBookmarks = (initialPage: Page, initialHidden: string[], callback: Func
         lists.filter(list => list.active).forEach(list => list.active = false);
     };
 
-    const loadHiddenList = () => {
+    const loadHiddenList = async () => {
         let hiddenList = lists.find(list => list.type === 'hidden');
         if (!hiddenList) {
             hiddenList = {
@@ -45,15 +45,15 @@ const useBookmarks = (initialPage: Page, initialHidden: string[], callback: Func
                 return;
             }
         };
-        chrome.bookmarks.getTree(root => {
-            searchHidden(root[0]);
-            if (hiddenList) {
-                hiddenList.items = hiddenItems;
-                hideLists();
-                hiddenList.active = true;
-            }
-            setLists([...lists]);
-        });
+
+        const root = await chrome.bookmarks.getTree();
+        searchHidden(root[0]);
+        if (hiddenList) {
+            hiddenList.items = hiddenItems;
+            hideLists();
+            hiddenList.active = true;
+        }
+        setLists([...lists]);
     };
 
     useEffect(() => {
@@ -65,7 +65,8 @@ const useBookmarks = (initialPage: Page, initialHidden: string[], callback: Func
                     existList.active = true;
                     setLists([...lists]);
                 } else {
-                    chrome.bookmarks.getChildren(page.key, results => {
+                    (async () => {
+                        const results = await chrome.bookmarks.getChildren(page.key);
                         const newList: BookmarkList = {
                             type: 'folder',
                             key: page.key,
@@ -74,7 +75,7 @@ const useBookmarks = (initialPage: Page, initialHidden: string[], callback: Func
                         }
                         hideLists();
                         setLists([...lists, newList]);
-                    })
+                    })();
                 }
                 break;
 
@@ -89,14 +90,16 @@ const useBookmarks = (initialPage: Page, initialHidden: string[], callback: Func
                     }
                     lists.push(searchList);
                 }
-                chrome.bookmarks.search(page.key, results => {
+                (async () => {
+                    const results = await chrome.bookmarks.search(page.key);
                     if (searchList) {
                         searchList.items = results;
                         hideLists();
                         searchList.active = true;
                     }
                     setLists([...lists]);
-                });
+                })();
+
                 break;
 
             case 'hidden':

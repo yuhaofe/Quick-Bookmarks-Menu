@@ -36,7 +36,7 @@ function Popup(props: PopupProps) {
         } else {
             newHidden = hidden.concat([key]);
         }
-        chrome.storage.local.set({ hidden: newHidden }, () => {
+        chrome.storage.local.set({ hidden: newHidden }).then(() => {
             setHidden(newHidden);
         });
     };
@@ -53,7 +53,7 @@ function Popup(props: PopupProps) {
 }
 
 // load config and render popup
-chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], (result: Partial<Configuration>) => {
+chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden']).then((result: Partial<Configuration>) => {
     adjustHeight((result as Configuration).startup[1]);
     render(<Popup config={result as Configuration} />, document.body);
 });

@@ -42,24 +42,23 @@ export default function PopupHeader(props: PopupHeaderProps) {
         config.root = '0';
     }
 
-    const insertItem = (id: string, newPaths: BookmarkPathProps[]) => {
+    const insertItem = async (id: string, newPaths: BookmarkPathProps[]) => {
         const path: BookmarkPathProps = {
             id: id,
             title: ''
         };
 
-        chrome.bookmarks.get(id, results => {
-            path.title = results[0].title;
-            if (id === '0') path.title = chrome.i18n.getMessage("home");
-            newPaths.unshift(path);//insert before first
-            if (id === config.root || !results[0].parentId) {
-                newPaths[newPaths.length - 1].last = true;
-                setPaths(newPaths);
-                if (empty) setEmpty(false);
-                return;
-            }
-            insertItem(results[0].parentId, newPaths);
-        });
+        const results = await chrome.bookmarks.get(id);
+        path.title = results[0].title;
+        if (id === '0') path.title = chrome.i18n.getMessage("home");
+        newPaths.unshift(path);//insert before first
+        if (id === config.root || !results[0].parentId) {
+            newPaths[newPaths.length - 1].last = true;
+            setPaths(newPaths);
+            if (empty) setEmpty(false);
+            return;
+        }
+        insertItem(results[0].parentId, newPaths);
     };
 
     const toggleSearch = () => {
