@@ -36,12 +36,11 @@ export default function BookmarkPath(props: BookmarkPathProps) {
         }
     };
 
-    const onClick = () => {
+    const onClick = async () => {
         if (props.last) {
-            chrome.bookmarks.getChildren(props.id, results => {
-                chrome.storage.local.set({ startup: [props.id, results.length] });
-                notify({ target: props.title, action: chrome.i18n.getMessage("set_startup_done") });
-            });
+            const results = await chrome.bookmarks.getChildren(props.id);
+            chrome.storage.local.set({ startup: [props.id, results.length] });
+            notify({ target: props.title, action: chrome.i18n.getMessage("set_startup_done") });
         } else {
             openFolder();
         }

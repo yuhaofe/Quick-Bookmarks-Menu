@@ -28,10 +28,12 @@ export default function OptionsItem({ name: itemName, storage, type, options }: 
     const [value, setValue] = useState(options[0].value);
     const name = itemName.replace('_', '-');
 
-    const saveValue = (val: any) => {
-        chrome.storage.local.set({ [storage]: val }, () => {
-            setValue(val);
-        });
+    const saveValue = async (val: any) => {
+        chrome.storage.local.set({ [storage]: val })
+            .then(() => {
+                setValue(val);
+            });
+
         if (itemName === 'root_folder') {
             chrome.storage.local.set({ startup: [val, 18] });
         }
@@ -50,9 +52,10 @@ export default function OptionsItem({ name: itemName, storage, type, options }: 
     };
 
     useEffect(() => {
-        chrome.storage.local.get(storage, keys => {
+        (async () => {
+            const keys = await chrome.storage.local.get(storage);
             setValue(keys[storage]);
-        })
+        })();
     }, []);
 
     return (
