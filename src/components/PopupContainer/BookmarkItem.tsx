@@ -98,7 +98,7 @@ export default function BookmarkItem(props: BookmarkItemProps) {
         <div className={`bookmark-item${!props.active ? ' bookmark-item-hide' : ''} ${props.active || config.showHidden ? 'show-flex' : 'hide'}`}
             data-id={props.id}>
             <button className="bookmark-item-button" role="link" tabIndex={0} title={props.type === 'link' ? props.title + "\n" + props.url : ""}
-                type={props.type} onClick={handleClick} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} onWheel={handleMouseOut}
+                onClick={handleClick} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} onWheel={handleMouseOut}
                 onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
                 <img className={`bookmark-item-icon bookmark-item-icon-${props.type}`} src={props.type === 'link' ? "chrome://favicon/" + props.url
                     : "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="} />
