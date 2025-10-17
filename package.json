@@ -1,35 +1,40 @@
 {
   "name": "quick-bookmarks-menu",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A chrome extension gives you quick access to your bookmarks.",
+  "type": "module",
   "scripts": {
-    "predev": "npm run clean",
+    "predev": "npm run clean && npm run type-check",
     "dev": "npm run build:static && NODE_ENV=development node build.js",
-    "prebuild": "npm run clean",
+    "prebuild": "npm run clean && npm run type-check",
     "build": "npm run build:static && NODE_ENV=production node build.js",
     "prepack": "npm run build",
     "pack": "7z a build/build.zip ./build/*",
     "clean": "rm -rf build/*",
-    "build:static": "cp -r public/. build/"
+    "build:static": "cp -r public/. build/",
+    "type-check": "tsc -noEmit"
   },
-  "keywords": ["chrome-extension", "bookmarks"],
+  "keywords": [
+    "chrome-extension",
+    "bookmarks"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flyhaozi/Quick-Bookmarks-Menu.git"
+    "url": "git+https://github.com/yuhaofe/Quick-Bookmarks-Menu.git"
   },
-  "author": "fHz",
+  "author": "yuhaofe",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/flyhaozi/Quick-Bookmarks-Menu/issues"
+    "url": "https://github.com/yuhaofe/Quick-Bookmarks-Menu/issues"
   },
-  "homepage": "https://flyhaozi.com/quick-bookmarks-menu",
+  "homepage": "https://yuhaofe.com/quick-bookmarks-menu",
   "dependencies": {
-    "preact": "^10.5.14"
+    "preact": "^10.27.2"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.159",
-    "esbuild": "^0.13.4",
-    "sass": "^1.42.1",
-    "typescript": "^4.4.3"
+    "@types/chrome": "^0.1.24",
+    "esbuild": "^0.25.11",
+    "sass-embedded": "^1.93.2",
+    "typescript": "^5.9.3"
   }
 }
