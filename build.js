@@ -34,7 +34,7 @@ const scssPlugin = {
  * @type { esbuild.BuildOptions }
  */
 const buildOptions = {
-    entryPoints: { popup: 'src/Popup.tsx', background: 'src/background.ts' },
+    entryPoints: { popup: 'src/Popup.tsx', service_worker: 'src/service_worker.ts' },
     outdir: 'build',
     bundle: true,
     minify: true,
