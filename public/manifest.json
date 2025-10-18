@@ -20,7 +20,8 @@
     "permissions": [
         "bookmarks",
         "favicon",
-        "storage"
+        "storage",
+        "offscreen"
     ],
     "background": {
         "service_worker": "service_worker.js",
