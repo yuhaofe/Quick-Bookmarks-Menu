@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import OptionsItemComponent, { OptionsItem } from './OptionsItem';
+import { applyTheme } from '../../utils/theme';
 import "./OptionsPage.scss";
 
 const optionsItems: OptionsItem[] = [
@@ -92,7 +93,10 @@ const optionsItems: OptionsItem[] = [
         name: 'root_folder',
         storage: 'root',
         type: 'radio',
-        options: [{ name: '', value: '0' }]
+        options: [{ name: '', value: '0' }],
+        callback: (val) => {
+            chrome.storage.local.set({ startup: [val, 18] });
+        }
     },
     {
         name: 'color_theme',
@@ -111,7 +115,10 @@ const optionsItems: OptionsItem[] = [
                 name: 'dark',
                 value: 'dark',
             }
-        ]
+        ],
+        callback: (val) => {
+            applyTheme(val);
+        }
     },
     {
         name: 'scroll_layout',

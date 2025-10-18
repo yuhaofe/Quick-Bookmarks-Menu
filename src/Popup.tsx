@@ -5,7 +5,9 @@ import PopupHeader from './components/PopupHeader';
 import PopupContainer from './components/PopupContainer';
 import PopupFooter from './components/PopupFooter';
 import ContextMenu from './components/ContextMenu';
+import { applyTheme } from './utils/theme';
 import './Popup.scss';
+
 
 interface PopupProps {
     config: Configuration
@@ -62,52 +64,4 @@ function adjustHeight(length: number) {
     const rootStyle = document.documentElement.style;
     const height = (length + 2) * 30;
     rootStyle.setProperty('--startup-height', (height > 600) ? '600px' : height + 'px');
-}
-
-function applyTheme(theme: 'auto' | 'light' | 'dark') {
-    const rootElm = document.documentElement;
-
-    const applyDarkTheme = () => {
-        rootElm.classList.add('theme-dark');
-        rootElm.classList.remove('theme-light');
-        chrome.action.setIcon({
-            path: {
-                "16": "/icons/qbm16-dark.png",
-                "32": "/icons/qbm32-dark.png"
-            }
-        });
-    }
-
-    const applyLightTheme = () => {
-        rootElm.classList.add('theme-light');
-        rootElm.classList.remove('theme-dark');
-        chrome.action.setIcon({
-            path: {
-                "16": "/icons/qbm16.png",
-                "32": "/icons/qbm32.png"
-            }
-        });
-    }
-
-    switch (theme) {
-        case 'light':
-            applyLightTheme();
-            break;
-        case 'dark':
-            applyDarkTheme();
-            break;
-        case 'auto':
-        default:
-            const mql = window.matchMedia('(prefers-color-scheme: dark)');
-            const colorSchemeTest = (e: MediaQueryListEvent | MediaQueryList) => {
-                if (e.matches) {
-                    applyDarkTheme();
-                } else {
-                    applyLightTheme();
-                }
-            };
-            mql.onchange = colorSchemeTest;
-            colorSchemeTest(mql);
-            break;
-    }
 }
