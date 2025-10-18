@@ -73,8 +73,6 @@ body {
     background-color: var(--bg-color);
     margin: 0px 0px;
     padding: 0px;
-    display: flex;
-    flex-direction: column;
     min-width: 300px;
     max-width: 800px;
     max-height: 600px;
@@ -86,16 +84,7 @@ body.startup {
     height: var(--startup-height)!important;
 }
 
-body > :first-child {
-    flex: 0 0 auto;
-}
-
-body > :nth-child(2) {
-    flex: 1 1 auto;
-}
-
 body > :nth-child(3), body > :nth-child(3):hover,  body > :nth-child(3):focus, body > :nth-child(3):active {
-    flex: 0 0 auto;
     box-sizing: content-box;
     border-top-width: 1px!important;
     border-top-color: var(--line-color);
