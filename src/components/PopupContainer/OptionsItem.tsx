@@ -20,22 +20,21 @@ export interface OptionsItem {
     type: 'radio' | 'checkbox';
     /** This item's options */
     options: Option[];
+    /** callback after value change */
+    callback?: (val: any) => void;
 }
 
 interface OptionsItemProps extends OptionsItem { }
 
-export default function OptionsItem({ name: itemName, storage, type, options }: OptionsItemProps) {
+export default function OptionsItem({ name: itemName, storage, type, options, callback }: OptionsItemProps) {
     const [value, setValue] = useState(options[0].value);
     const name = itemName.replace('_', '-');
 
     const saveValue = async (val: any) => {
-        chrome.storage.local.set({ [storage]: val })
-            .then(() => {
-                setValue(val);
-            });
-
-        if (itemName === 'root_folder') {
-            chrome.storage.local.set({ startup: [val, 18] });
+        await chrome.storage.local.set({ [storage]: val });
+        setValue(val);
+        if (callback && typeof callback === 'function') {
+            callback(val);
         }
     };
 
