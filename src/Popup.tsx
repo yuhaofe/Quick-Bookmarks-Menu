@@ -41,7 +41,6 @@ function Popup(props: PopupProps) {
         });
     };
 
-    applyTheme(config.theme);
     return (
         <ContextWrapper nav={navigate} config={[config, setConfig]} notify={notify} hide={setItemHide}>
             <PopupHeader page={page} msgs={msgs} clearMsg={clearMsg} horiz={config.scroll === 'x'} />
@@ -55,6 +54,7 @@ function Popup(props: PopupProps) {
 // load config and render popup
 chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden']).then((result: Partial<Configuration>) => {
     adjustHeight((result as Configuration).startup[1]);
+    applyTheme((result as Configuration).theme);
     render(<Popup config={result as Configuration} />, document.body);
 });
 
