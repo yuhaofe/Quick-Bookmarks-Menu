@@ -36,12 +36,11 @@ function Popup(props: PopupProps) {
         } else {
             newHidden = hidden.concat([key]);
         }
-        chrome.storage.local.set({ hidden: newHidden }, () => {
+        chrome.storage.local.set({ hidden: newHidden }).then(() => {
             setHidden(newHidden);
         });
     };
 
-    applyTheme(config.theme);
     return (
         <ContextWrapper nav={navigate} config={[config, setConfig]} notify={notify} hide={setItemHide}>
             <PopupHeader page={page} msgs={msgs} clearMsg={clearMsg} horiz={config.scroll === 'x'} />
@@ -53,8 +52,9 @@ function Popup(props: PopupProps) {
 }
 
 // load config and render popup
-chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], (result: Partial<Configuration>) => {
+chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden']).then((result: Partial<Configuration>) => {
     adjustHeight((result as Configuration).startup[1]);
+    applyTheme((result as Configuration).theme);
     render(<Popup config={result as Configuration} />, document.body);
 });
 
@@ -70,7 +70,7 @@ function applyTheme(theme: 'auto' | 'light' | 'dark') {
     const applyDarkTheme = () => {
         rootElm.classList.add('theme-dark');
         rootElm.classList.remove('theme-light');
-        chrome.browserAction.setIcon({
+        chrome.action.setIcon({
             path: {
                 "16": "/icons/qbm16-dark.png",
                 "32": "/icons/qbm32-dark.png"
@@ -81,7 +81,7 @@ function applyTheme(theme: 'auto' | 'light' | 'dark') {
     const applyLightTheme = () => {
         rootElm.classList.add('theme-light');
         rootElm.classList.remove('theme-dark');
-        chrome.browserAction.setIcon({
+        chrome.action.setIcon({
             path: {
                 "16": "/icons/qbm16.png",
                 "32": "/icons/qbm32.png"

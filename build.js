@@ -1,6 +1,6 @@
-const sass = require('sass');
-const esbuild = require('esbuild');
-const process = require('process');
+import * as sass from 'sass-embedded'
+import * as esbuild from 'esbuild'
+import * as process from 'process'
 
 const dev = process.env.NODE_ENV === 'development';
 const prod = process.env.NODE_ENV === 'production';
@@ -18,13 +18,13 @@ const scssPlugin = {
             }
         });
 
-        build.onLoad({ filter: /\.scss$/ }, args => {
-            const { css, stats: { includedFiles } } = sass.renderSync({ file: args.path });
+        build.onLoad({ filter: /\.scss$/ }, async args => {
+            const { css, loadedUrls } = await sass.compileAsync(args.path);
 
             return {
                 contents: css.toString('utf-8'),
                 loader: 'css',
-                watchFiles: includedFiles
+                watchFiles: loadedUrls.map(url => url.pathname)
             }
         });
     }
@@ -34,13 +34,17 @@ const scssPlugin = {
  * @type { esbuild.BuildOptions }
  */
 const buildOptions = {
-    entryPoints: { popup: 'src/Popup.tsx', background: 'src/background.ts' },
+    entryPoints: { 
+        popup: 'src/Popup.tsx', 
+        service_worker: 'src/service_worker.ts',
+        off_screen: 'src/off_screen.ts'
+    },
     outdir: 'build',
     bundle: true,
     minify: true,
     keepNames: true,
     format: 'esm',
-    target: 'chrome86',
+    target: 'chrome88', // above manifest v3
     jsxFactory: 'h',
     jsxFragment: 'Fragment',
     logLevel: 'info',
@@ -48,17 +52,21 @@ const buildOptions = {
 
     // dev options
     sourcemap: dev ? 'inline' : false,
-    watch: dev,
 
     // prod options
     metafile: prod
 };
 
 async function build() {
-    const result = await esbuild.build(buildOptions).catch(() => process.exit(1));
-
+    const context = await esbuild.context(buildOptions);
+    const result = await context.rebuild();
     if (result.metafile) {
         console.log(await esbuild.analyzeMetafile(result.metafile));
+    }
+    if (dev) {
+        await context.watch();
+    } else {
+        context.dispose();
     }
 }
 
