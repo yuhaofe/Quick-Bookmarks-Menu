@@ -42,13 +42,14 @@ export default function ContextMenu({ }: ContextMenuProps) {
             return;
         }
         const active = !bmItem.matches('.bookmark-item-hide');
-        chrome.bookmarks.get(id, results => {
-            if (results.length === 0) {
-                return;
-            }
-            let { id, title, url } = results[0];
-            setBookmark({ id, title, url, active });
-        })
+        chrome.bookmarks.get(id)
+            .then(results => {
+                if (results.length === 0) {
+                    return;
+                }
+                let { id, title, url } = results[0];
+                setBookmark({ id, title, url, active });
+            });
 
         // make sure menu is not out of viewport
         let menu: any = menuRef.current;

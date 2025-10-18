@@ -28,7 +28,7 @@ export default function PopupFooter(props: PopupFooterProps) {
         }
     };
 
-    const onOptionsClick = (e: MouseEvent) => {
+    const onOptionsClick = async (e: MouseEvent) => {
         if (e.currentTarget instanceof HTMLButtonElement) {
             e.currentTarget.blur();
         }
@@ -38,10 +38,9 @@ export default function PopupFooter(props: PopupFooterProps) {
             }
             navigate('options', '');
         } else {
-            chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden'], (result: Partial<Configuration>) => {
-                setConfig(result as Configuration);
-                navigate('folder', (result as Configuration).startup[0]);
-            });
+            const result = await chrome.storage.local.get(['openIn', 'openInMiddle', 'doNotClose', 'hoverEnter', 'startup', 'root', 'theme', 'scroll', 'hidden', 'showHidden']);
+            setConfig(result as Configuration);
+            navigate('folder', (result as Configuration).startup[0]);
         }
     };
 

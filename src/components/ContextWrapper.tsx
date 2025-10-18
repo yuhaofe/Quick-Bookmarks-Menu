@@ -1,5 +1,5 @@
 import { h, createContext, ComponentChildren } from 'preact';
-import { StateUpdater } from 'preact/hooks';
+import { Dispatch, StateUpdater } from 'preact/hooks';
 
 export interface Page {
     type: 'folder' | 'search' | 'hidden' | 'options';
@@ -26,7 +26,7 @@ export interface Message {
 
 interface ContextWrapperProps {
     nav: (type: Page["type"], key: Page["key"]) => void;
-    config: [Configuration, StateUpdater<Configuration>];
+    config: [Configuration, Dispatch<StateUpdater<Configuration>>];
     notify: (msg: Message) => void;
     hide: (key: string) => void;
     children: ComponentChildren;
